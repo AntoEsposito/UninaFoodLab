@@ -20,33 +20,27 @@ public class DatabaseConnection
 
     
     // getter of the unique instance
-    public static DatabaseConnection getInstance()
-    {
+    public static DatabaseConnection getInstance() {
         if (instance == null) instance = new DatabaseConnection();
         
         return instance;
     }
 
-    public void openConnection() throws SQLException
-    {
-        if (connection == null || connection.isClosed()) 
-        {
+    public void openConnection() throws SQLException {
+        if (connection == null || connection.isClosed()) {
             connection = DriverManager.getConnection(url, user, password);
             System.out.println("Connection established!");
         }
     }
 
-    public void closeConnection() throws SQLException
-    {
-        if (connection != null && !connection.isClosed()) 
-        {
+    public void closeConnection() throws SQLException {
+        if (connection != null && !connection.isClosed()) {
             connection.close();
             System.out.println("Connection closed!");
         }
     }
     
-    public Connection getConnection() 
-    {
+    public Connection getConnection() {
         return connection;
     }
 }
