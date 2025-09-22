@@ -27,35 +27,21 @@ public class DatabaseConnection
         return instance;
     }
 
-    public void openConnection() 
+    public void openConnection() throws SQLException
     {
-    	try 
+        if (connection == null || connection.isClosed()) 
         {
-            if (connection == null || connection.isClosed()) 
-            {
-                connection = DriverManager.getConnection(url, user, password);
-                System.out.println("Connection established!");
-            }
-        } 
-        catch (SQLException e) 
-        {
-            System.out.println("Connection Failed! " + e.getMessage());
+            connection = DriverManager.getConnection(url, user, password);
+            System.out.println("Connection established!");
         }
     }
 
-    public void closeConnection() 
+    public void closeConnection() throws SQLException
     {
-        try 
+        if (connection != null && !connection.isClosed()) 
         {
-            if (connection != null && !connection.isClosed()) 
-            {
-                connection.close();
-                System.out.println("Connection closed!");
-            }
-        } 
-        catch (SQLException e) 
-        {
-            System.out.println("Failed to close connection! " + e.getMessage());
+            connection.close();
+            System.out.println("Connection closed!");
         }
     }
     
