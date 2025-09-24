@@ -3,40 +3,29 @@ package entities;
 public class Chef 
 {
 	private int id;
-	private String name;
-	private String surname;
+	private String nome;
+	private String cognome;
 	private String username;
 	private String password;
 	
 	
-	public Chef(int id, String name, String surname, String username, String password) {
+	public Chef(int id, String nome, String cognome, String username, String password) 
+	{
 		this.id = id;
-		this.name = name;
-		this.surname = surname;
+		this.nome = nome;
+		this.cognome = cognome;
 		this.username = username;
 		this.password = password;
 	}
 	
 	
-	public int getId() {
-		return id;
-	}
+	public int getId() {return id;}
 	
-	public String getName() {
-		return name;
-	}
+	public String getNome() {return nome;}
 	
-	public String getSurname() {
-		return surname;
-	}
+	public String getCognome() {return cognome;}
 	
-	public String getUsername() {
-		return username;
-	}
+	public String getUsername() {return username;}
 	
-	public String getPassword() {
-		return password;
-	}
-	
-	
+	public String getPassword() {return password;}
 }
