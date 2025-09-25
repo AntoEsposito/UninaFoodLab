@@ -1,15 +1,24 @@
 package entities;
 
+import java.util.List;
+import java.util.ArrayList;
+
 public class Ricetta 
 {
 	private int id;
 	private String nome;
+	private List<Sessione> sessioniInCuiVieneRealizata;
 	
 	
-	public Ricetta(int id, String nome) 
+	public Ricetta(int id, String nome, List<Sessione> sessioni) 
 	{
 		this.id = id;
 		this.nome = nome;
+		this.sessioniInCuiVieneRealizata = new ArrayList<>(sessioni);
+	}
+	public Ricetta(int id, String nome) 
+	{
+		this(id, nome, new ArrayList<Sessione>());
 	}
 	
 	
@@ -17,4 +26,5 @@ public class Ricetta
 	
 	public String getNome() {return nome;}
 	
+	public List<Sessione> getSessioniInCuiVieneRealizata() {return new ArrayList<>(sessioniInCuiVieneRealizata);}
 }

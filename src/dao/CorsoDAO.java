@@ -18,6 +18,41 @@ public class CorsoDAO
 	public CorsoDAO() {} // empty constructor (no attributes to initialize)
 	
 	
+	public Corso getCorsoById(int id)
+	{
+		Corso corso = null;
+		String query = "SELECT * FROM corso WHERE id_corso = ?";
+		
+		try (Connection conn = DatabaseConnection.getInstance().getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(query)) 
+		{
+			pstmt.setInt(1, id);
+			
+			try (ResultSet rs = pstmt.executeQuery()) 
+			{
+				if (rs.next())
+				{
+					LocalDate dataInizio = rs.getDate("data_inizio").toLocalDate();
+					int numeroSessioni = rs.getInt("numero_sessioni");
+					
+					FrequenzaSessioniDAO frequenzaDAO = new FrequenzaSessioniDAO();
+					FrequenzaSessioni frequenza = frequenzaDAO.getFrequenzaById(rs.getInt("id_frequenza"));
+					
+					CategoriaDAO categoriaDAO = new CategoriaDAO();
+					Categoria categoria = categoriaDAO.getCategoriaById(rs.getInt("id_categoria"));
+
+					ChefDAO chefDAO = new ChefDAO();
+					Chef chef = chefDAO.getChefById(rs.getInt("id_chef"));
+					
+					corso = new Corso(id, dataInizio, numeroSessioni, frequenza, categoria, chef);
+				}
+			}
+		} 
+		catch (SQLException e) {e.printStackTrace();}
+		
+		return corso;
+	}
+	
 	public List<Corso> getCorsoByChef(Chef chef)
 	{
 		List<Corso> corsi = new ArrayList<Corso>();
