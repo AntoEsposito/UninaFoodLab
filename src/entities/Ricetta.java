@@ -1,20 +1,15 @@
 package entities;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Ricetta 
 {
 	private int id;
 	private String nome;
-	private List<IngredientiUtilizzati> ingredienti;
 	
 	
-	public Ricetta(int id, String nome, List<IngredientiUtilizzati> ingredienti) 
+	public Ricetta(int id, String nome) 
 	{
 		this.id = id;
 		this.nome = nome;
-		this.ingredienti = new ArrayList<>(ingredienti);
 	}
 	
 	
@@ -22,5 +17,4 @@ public class Ricetta
 	
 	public String getNome() {return nome;}
 	
-	public List<IngredientiUtilizzati> getIngredienti() {return new ArrayList<>(ingredienti);}
 }
