@@ -12,7 +12,7 @@ public class FrequenzaSessioniDAO
 	public FrequenzaSessioni getFrequenzaById(int id)
 	{
 		FrequenzaSessioni frequenza = null;
-		String query = "SELECT * FROM frequenza_sessioni WHERE id = ?";
+		String query = "SELECT * FROM frequenza_sessioni WHERE id_frequenza = ?";
 		
 		try (Connection conn = DatabaseConnection.getInstance().getConnection();
 			 PreparedStatement pstmt = conn.prepareStatement(query)) 
