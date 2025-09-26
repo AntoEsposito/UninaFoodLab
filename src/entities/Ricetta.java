@@ -7,14 +7,14 @@ public class Ricetta
 {
 	private int id;
 	private String nome;
-	private List<Sessione> sessioniInCuiVieneRealizata;
+	private List<Sessione> sessioniInCuiVieneRealizzata;
 	
 	
 	public Ricetta(int id, String nome, List<Sessione> sessioni) 
 	{
 		this.id = id;
 		this.nome = nome;
-		this.sessioniInCuiVieneRealizata = new ArrayList<>(sessioni);
+		this.sessioniInCuiVieneRealizzata = new ArrayList<>(sessioni);
 	}
 	public Ricetta(int id, String nome) 
 	{
@@ -26,5 +26,5 @@ public class Ricetta
 	
 	public String getNome() {return nome;}
 	
-	public List<Sessione> getSessioniInCuiVieneRealizata() {return new ArrayList<>(sessioniInCuiVieneRealizata);}
+	public List<Sessione> getSessioniInCuiVieneRealizata() {return new ArrayList<>(sessioniInCuiVieneRealizzata);}
 }
