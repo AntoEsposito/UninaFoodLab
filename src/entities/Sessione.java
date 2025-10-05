@@ -10,18 +10,18 @@ public class Sessione
 	private boolean inPresenza;
 	private LocalDate data;
 	private int numeroSessione;
-	private String urlMeeting;
+	private String url;
 	private Corso corsoDiAppartenenza;
 	private List<Ricetta> ricetteTrattate;
 	
 
-	public Sessione(int id, boolean inPresenza, LocalDate data, int numeroSessione, String urlMeeting, Corso corso, List<Ricetta> ricette) 
+	public Sessione(int id, boolean inPresenza, LocalDate data, int numeroSessione, String url, Corso corso, List<Ricetta> ricette) 
 	{
 		this.id = id;
 		this.inPresenza = inPresenza;
 		this.data = data;
 		this.numeroSessione = numeroSessione;
-		this.urlMeeting = urlMeeting;
+		this.url = url;
 		this.corsoDiAppartenenza = corso;
 		this.ricetteTrattate = new ArrayList<>(ricette);
 	}
@@ -39,7 +39,7 @@ public class Sessione
 	
 	public int getNumeroSessione() {return numeroSessione;}	
 	
-	public String getUrlMeeting() {return urlMeeting;}
+	public String getUrlMeeting() {return url;}
 	
 	public Corso getCorsoDiAppartenenza() {return corsoDiAppartenenza;}
 	

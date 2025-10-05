@@ -6,10 +6,10 @@ import java.sql.*;
 
 public class FrequenzaSessioniDAO 
 {
-	public FrequenzaSessioniDAO() {} // empty constructor (no attributes to initialize)
+	public FrequenzaSessioniDAO() {} 
 	
 	
-	public FrequenzaSessioni getFrequenzaById(int id)
+	public FrequenzaSessioni getById(int id) 
 	{
 		FrequenzaSessioni frequenza = null;
 		String query = "SELECT * FROM frequenza_sessioni WHERE id_frequenza = ?";
@@ -18,15 +18,15 @@ public class FrequenzaSessioniDAO
 			 PreparedStatement pstmt = conn.prepareStatement(query)) 
 		{
 			pstmt.setInt(1, id);
+			ResultSet rs = pstmt.executeQuery();
 			
-			try (ResultSet rs = pstmt.executeQuery()) 
+			if (rs.next()) 
 			{
-				if (rs.next())
-				{
-					String descrizione = rs.getString("descrizione");
-					frequenza = new FrequenzaSessioni(id, descrizione);
-				}
+				String descrizione = rs.getString("descrizione");
+				frequenza = new FrequenzaSessioni(id, descrizione);
 			}
+			
+			rs.close();
 		} 
 		catch (SQLException e) {e.printStackTrace();}
 		

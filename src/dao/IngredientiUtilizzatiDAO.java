@@ -1,50 +1,45 @@
 package dao;
 
-import entities.Ingrediente;
-import entities.IngredientiUtilizzati;
-import entities.Ricetta;
-
-import java.sql.*;
 import connection.DatabaseConnection;
-
-import java.util.List;
-import java.util.ArrayList;
+import entities.IngredientiUtilizzati;
+import entities.Ingrediente;
+import entities.Ricetta;
+import java.sql.*;
 
 public class IngredientiUtilizzatiDAO 
 {
-	public IngredientiUtilizzatiDAO() {} // empty constructor (no attributes to initialize)
+	public IngredientiUtilizzatiDAO() {} 
 	
 	
-	public List<IngredientiUtilizzati> getIngredientiUtilizzatiByRicetta(int idRicetta)
+	public IngredientiUtilizzati getByIdRicettaAndIdIngrediente(int idRicetta, int idIngrediente) 
 	{
-		List<IngredientiUtilizzati> ingredientiUtilizzati = new ArrayList<IngredientiUtilizzati>();
-		String query = "SELECT * FROM ingredienti_utilizzati WHERE id_ricetta = ?";
+		IngredientiUtilizzati ingredientiUtilizzati = null;
+		String query = "SELECT * FROM ingredienti_utilizzati WHERE id_ricetta = ? AND id_ingrediente = ?";
 		
 		try (Connection conn = DatabaseConnection.getInstance().getConnection();
-		     PreparedStatement pstmt = conn.prepareStatement(query)) 
+			 PreparedStatement pstmt = conn.prepareStatement(query)) 
 		{
 			pstmt.setInt(1, idRicetta);
+			pstmt.setInt(2, idIngrediente);
+			ResultSet rs = pstmt.executeQuery();
 			
-			try (ResultSet rs = pstmt.executeQuery()) 
+			if (rs.next()) 
 			{
-				while (rs.next())
-				{
-					int doseInGrammi = rs.getInt("dose_grammi");
-					
-					IngredienteDAO ingredienteDAO = new IngredienteDAO();
-					Ingrediente ingrediente = ingredienteDAO.getIngredienteById(rs.getInt("id_ingrediente"));
-					
-					RicettaDAO ricettaDAO = new RicettaDAO();
-					Ricetta ricetta = ricettaDAO.getRicettaById(rs.getInt("id_ricetta"));
-					
-					IngredientiUtilizzati toAdd = new IngredientiUtilizzati(ingrediente, ricetta, doseInGrammi);
-					ingredientiUtilizzati.add(toAdd);
-					
-				}
+				int doseInGrammi = rs.getInt("dose_in_grammi");
+				
+				IngredienteDAO ingredienteDAO = new IngredienteDAO();
+				Ingrediente ingrediente = ingredienteDAO.getById(idIngrediente);
+				
+				RicettaDAO ricettaDAO = new RicettaDAO();
+				Ricetta ricetta = ricettaDAO.getById(idRicetta);
+				
+				ingredientiUtilizzati = new IngredientiUtilizzati(ingrediente, ricetta, doseInGrammi);
 			}
+			
+			rs.close();
 		} 
 		catch (SQLException e) {e.printStackTrace();}
 		
-		return ingredientiUtilizzati; // null if not found
+		return ingredientiUtilizzati;
 	}
 }

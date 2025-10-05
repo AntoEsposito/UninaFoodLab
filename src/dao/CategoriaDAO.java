@@ -6,27 +6,27 @@ import java.sql.*;
 
 public class CategoriaDAO 
 {
-	public CategoriaDAO() {} // empty constructor (no attributes to initialize)
+	public CategoriaDAO() {} 
 	
 	
-	public Categoria getCategoriaById(int id) 
+	public Categoria getById(int id) 
 	{
 		Categoria categoria = null;
 		String query = "SELECT * FROM categoria WHERE id_categoria = ?";
 		
 		try (Connection conn = DatabaseConnection.getInstance().getConnection();
-		     PreparedStatement pstmt = conn.prepareStatement(query)) 
+			 PreparedStatement pstmt = conn.prepareStatement(query)) 
 		{
 			pstmt.setInt(1, id);
+			ResultSet rs = pstmt.executeQuery();
 			
-			try (ResultSet rs = pstmt.executeQuery()) 
+			if (rs.next()) 
 			{
-				if (rs.next())
-				{
-					String descrizione = rs.getString("descrizione");
-					categoria = new Categoria(id, descrizione);
-				}
+				String nome = rs.getString("nome");
+				categoria = new Categoria(id, nome);
 			}
+			
+			rs.close();
 		} 
 		catch (SQLException e) {e.printStackTrace();}
 		
