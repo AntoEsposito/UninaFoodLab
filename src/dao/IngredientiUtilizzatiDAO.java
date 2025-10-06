@@ -24,7 +24,7 @@ public class IngredientiUtilizzatiDAO
 		// JOIN per ottenere tutte le informazioni necessarie in una sola query
 		String query = "SELECT iu.dose_in_grammi, i.id_ingrediente, i.nome " +
 					   "FROM ingredienti_utilizzati AS iu " +
-					   "JOIN ingredienti AS i ON iu.id_ingrediente = i.id_ingrediente " +
+					   "NATURAL JOIN ingrediente AS i " +
 					   "WHERE iu.id_ricetta = ?";
 		
 		List<IngredientiUtilizzati> listaIngredienti = new ArrayList<>();
