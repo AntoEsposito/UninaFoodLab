@@ -11,29 +11,27 @@ import java.util.List;
 
 public class SessioneDAO 
 {
-	private CorsoDAO corsoDAO;
 	private RicettaDAO ricettaDAO;
 	
 	
 	public SessioneDAO() 
 	{
-		corsoDAO = new CorsoDAO();
 		ricettaDAO = new RicettaDAO();
 	}
 	
 	
-	public List<Sessione> getByIdCorso(int idCorso) 
+	public List<Sessione> getByCorso(Corso corso) 
 	{
-		String query = "SELECT * FROM sessione NATURAL JOIN ricetta WHERE id_corso = ? ";
+		String query = "SELECT * FROM sessione WHERE id_corso = ? ";
 		List<Sessione> listaSessioni = new ArrayList<>();
 		
 		try (Connection conn = DatabaseConnection.getInstance().getConnection();
 			 PreparedStatement pstmt = conn.prepareStatement(query)) 
 		{
-			pstmt.setInt(1, idCorso);
+			pstmt.setInt(1, corso.getId());
 			try (ResultSet rs = pstmt.executeQuery())
 			{
-				while (rs.next()) {listaSessioni.add(createSessioneFromResultSet(rs));}
+				while (rs.next()) {listaSessioni.add(createSessioneFromResultSetAndCorso(rs, corso));}
 			}
 		} 
 		catch (SQLException e) {e.printStackTrace();}
@@ -41,7 +39,7 @@ public class SessioneDAO
 		return listaSessioni;
 	}
 	
-	private Sessione createSessioneFromResultSet(ResultSet rs) throws SQLException
+	private Sessione createSessioneFromResultSetAndCorso(ResultSet rs, Corso corso) throws SQLException
 	{
 		int id = rs.getInt("id_sessione");
 		boolean inPresenza = rs.getBoolean("in_presenza");
@@ -50,10 +48,7 @@ public class SessioneDAO
 		int numeroSessione = rs.getInt("numero_sessione");
 		String url = rs.getString("url");
 		
-		int idCorso = rs.getInt("id_corso");
-		Corso corso = corsoDAO.getById(idCorso);
-		
-		List<Ricetta> ricette = ricettaDAO.getByIdSessione(id);
+		List<Ricetta> ricette = ricettaDAO.getBySessione(new Sessione(id, inPresenza, data, numeroSessione, url, corso));
 		
 		return new Sessione(id, inPresenza, data, numeroSessione, url, corso, ricette);
 	}

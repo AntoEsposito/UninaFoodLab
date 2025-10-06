@@ -44,4 +44,6 @@ public class Chef
 	public String getPassword() {return password;}
 	
 	public List<Corso> getCorsiGestiti() {return new ArrayList<>(corsiGestiti);}
+	
+	public void addCorsi (List<Corso> corsi) {corsiGestiti.addAll(corsi);}
 }

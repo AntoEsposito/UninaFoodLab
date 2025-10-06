@@ -44,4 +44,6 @@ public class Corso
 	public Chef getChef() {return chef;}
 	
 	public List<Sessione> getSessioni() {return new ArrayList<>(sessioni);}
+	
+	public void addSessioni (List<Sessione> sessioniToAdd) {sessioni.addAll(sessioniToAdd);}
 }

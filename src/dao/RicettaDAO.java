@@ -2,6 +2,8 @@ package dao;
 
 import connection.DatabaseConnection;
 import entities.Ricetta;
+import entities.Sessione;
+
 import java.sql.*;
 import java.util.List;
 
@@ -28,7 +30,7 @@ public class RicettaDAO
 		return null;
 	}
 	
-	public List<Ricetta> getByIdSessione(int idSessione) 
+	public List<Ricetta> getBySessione(Sessione sessione) 
 	{
 		String query = "SELECT r.* FROM ricetta AS r " +
 					   "NATURAL JOIN realizzazione_ricetta AS rr " +
@@ -39,7 +41,7 @@ public class RicettaDAO
 		try (Connection conn = DatabaseConnection.getInstance().getConnection();
 			 PreparedStatement pstmt = conn.prepareStatement(query)) 
 		{
-			pstmt.setInt(1, idSessione);
+			pstmt.setInt(1, sessione.getId());
 			try (ResultSet rs = pstmt.executeQuery())
 			{
 				while (rs.next()) {listaRicette.add(createRicettaFromResultSet(rs));}
@@ -55,6 +57,6 @@ public class RicettaDAO
 		int id = rs.getInt("id_ricetta");
 		String nome = rs.getString("nome");
 		
-		return new Ricetta(id, nome);
+		return new Ricetta(id, nome); // per la nostra applicazione, inutile caricare le sessioni in cui è trattata
 	}
 }

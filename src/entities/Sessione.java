@@ -25,7 +25,11 @@ public class Sessione
 		this.corsoDiAppartenenza = corso;
 		this.ricetteTrattate = new ArrayList<>(ricette);
 	}
-	public Sessione(int id, boolean inPresenza, LocalDate data, int numeroSessione, String urlMeeting) 
+	public Sessione(int id, boolean inPresenza, LocalDate data, int numeroSessione, String urlMeeting, Corso corso) 
+	{
+		this(id, inPresenza, data, numeroSessione, urlMeeting, corso, new ArrayList<Ricetta>());
+	}
+	public Sessione(int id, boolean inPresenza, LocalDate data, int numeroSessione, String urlMeeting)
 	{
 		this(id, inPresenza, data, numeroSessione, urlMeeting, null, new ArrayList<Ricetta>());
 	}

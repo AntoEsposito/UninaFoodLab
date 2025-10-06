@@ -15,7 +15,6 @@ public class CorsoDAO
 {
 	private FrequenzaSessioniDAO frequenzaSessioniDAO;
 	private CategoriaDAO categoriaDAO;
-	private ChefDAO chefDAO;
 	private SessioneDAO sessioneDAO;
 	
 	
@@ -23,31 +22,30 @@ public class CorsoDAO
 	{
 		frequenzaSessioniDAO = new FrequenzaSessioniDAO();
 		categoriaDAO = new CategoriaDAO();
-		chefDAO = new ChefDAO();
 		sessioneDAO = new SessioneDAO();
 	}
 	
 	
-	public Corso getById(int id) 
+	public List<Corso> getByChef(Chef chef) 
 	{
-		String query = "SELECT * FROM corso	NATURAL JOIN sessione WHERE id_corso = ? ";
-		Corso corso = null;
+		String query = "SELECT * FROM corso WHERE id_chef = ? ";
+		List<Corso> corsi = new ArrayList<>();
 		
 		try (Connection conn = DatabaseConnection.getInstance().getConnection();
 			 PreparedStatement pstmt = conn.prepareStatement(query)) 
 		{
-			pstmt.setInt(1, id);
+			pstmt.setInt(1, chef.getId());
 			try (ResultSet rs = pstmt.executeQuery())
 			{
-				if (rs.next()) {corso = createCorsoFromResultSet(rs);}
+				while (rs.next()) {corsi.add(createCorsoFromResultSetAndChef(rs, chef));}
 			}
 		} 
 		catch (SQLException e) {e.printStackTrace();}
 		
-		return corso;
+		return corsi;
 	}
 	
-	private Corso createCorsoFromResultSet(ResultSet rs) throws SQLException
+	private Corso createCorsoFromResultSetAndChef(ResultSet rs, Chef chef) throws SQLException
 	{
 		int id = rs.getInt("id_corso");
 		LocalDate dataInizio = rs.getDate("data_inizio").toLocalDate();
@@ -59,10 +57,7 @@ public class CorsoDAO
 		int idCategoria = rs.getInt("id_categoria");
 		Categoria categoria = categoriaDAO.getById(idCategoria);
 		
-		int idChef = rs.getInt("id_chef");
-		Chef chef = chefDAO.getById(idChef);
-		
-		List<Sessione> sessioni = sessioneDAO.getByIdCorso(id);
+		List<Sessione> sessioni = sessioneDAO.getByCorso(new Corso(id, dataInizio, numeroSessioni, frequenza, categoria, chef));
 		
 		return new Corso(id, dataInizio, numeroSessioni, frequenza, categoria, chef, sessioni);
 	}
