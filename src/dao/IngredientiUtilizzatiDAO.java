@@ -18,9 +18,10 @@ public class IngredientiUtilizzatiDAO
 		ricettaDAO = new RicettaDAO();
 	} 
 	
+	
 	public List<IngredientiUtilizzati> getByIdRicetta(int idRicetta) 
 	{
-		// Usiamo una JOIN per ottenere tutte le informazioni necessarie in una sola query
+		// JOIN per ottenere tutte le informazioni necessarie in una sola query
 		String query = "SELECT iu.dose_in_grammi, i.id_ingrediente, i.nome " +
 					   "FROM ingredienti_utilizzati AS iu " +
 					   "JOIN ingredienti AS i ON iu.id_ingrediente = i.id_ingrediente " +
@@ -41,7 +42,7 @@ public class IngredientiUtilizzatiDAO
 			pstmt.setInt(1, idRicetta);
 			try (ResultSet rs = pstmt.executeQuery())
 			{
-				while (rs.next()) {listaIngredienti.add(createIngredientiUtilizzatiFromResultSet(rs, ricetta));}
+				while (rs.next()) {listaIngredienti.add(createIngredientiUtilizzatiFromResultSetAndRicetta(rs, ricetta));}
 			}
 		} 
 		catch (SQLException e) {e.printStackTrace();}
@@ -49,7 +50,7 @@ public class IngredientiUtilizzatiDAO
 		return listaIngredienti;
 	}
 
-	private IngredientiUtilizzati createIngredientiUtilizzatiFromResultSet(ResultSet rs, Ricetta ricetta) throws SQLException
+	private IngredientiUtilizzati createIngredientiUtilizzatiFromResultSetAndRicetta(ResultSet rs, Ricetta ricetta) throws SQLException
 	{
 		int doseInGrammi = rs.getInt("iu.dose_in_grammi");
 		int idIngrediente = rs.getInt("i.id_ingrediente");
