@@ -22,7 +22,7 @@ public class IngredientiUtilizzatiDAO
 	public List<IngredientiUtilizzati> getByIdRicetta(int idRicetta) 
 	{
 		// JOIN per ottenere tutte le informazioni necessarie in una sola query
-		String query = "SELECT iu.dose_in_grammi, i.id_ingrediente, i.nome " +
+		String query = "SELECT iu.dose_grammi, i.id_ingrediente, i.nome " +
 					   "FROM ingredienti_utilizzati AS iu " +
 					   "NATURAL JOIN ingrediente AS i " +
 					   "WHERE iu.id_ricetta = ?";
@@ -52,9 +52,9 @@ public class IngredientiUtilizzatiDAO
 
 	private IngredientiUtilizzati createIngredientiUtilizzatiFromResultSetAndRicetta(ResultSet rs, Ricetta ricetta) throws SQLException
 	{
-		int doseInGrammi = rs.getInt("iu.dose_in_grammi");
-		int idIngrediente = rs.getInt("i.id_ingrediente");
-		String nome = rs.getString("i.nome");
+		int doseInGrammi = rs.getInt("dose_grammi");
+		int idIngrediente = rs.getInt("id_ingrediente");
+		String nome = rs.getString("nome");
 		
 		Ingrediente ingrediente = new Ingrediente(idIngrediente, nome);
 		

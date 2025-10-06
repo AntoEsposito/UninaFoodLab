@@ -8,8 +8,6 @@ public class DatabaseConnection
     // unique class instance
     private static DatabaseConnection instance;
     
-    private Connection connection;
-    
     private final String url = "jdbc:postgresql://localhost:5432/UninaFoodLab";
     private final String user = "postgres";
     private final String password = "2684";
@@ -25,18 +23,10 @@ public class DatabaseConnection
         if (instance == null) instance = new DatabaseConnection();
         return instance;
     }
-    // opens connection and returns it
+    
+    // Crea e restituisce una NUOVA connessione ogni volta
     public Connection getConnection() throws SQLException 
     {
-        if (connection == null || connection.isClosed()) 
-        {
-            connection = DriverManager.getConnection(url, user, password);
-        }
-        return connection;
-    }
-
-    public void closeConnection() throws SQLException 
-    {
-        if (connection != null && !connection.isClosed()) connection.close();
+        return DriverManager.getConnection(url, user, password);
     }
 }

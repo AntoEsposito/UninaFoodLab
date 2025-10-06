@@ -46,7 +46,7 @@ public class SessioneDAO
 		Date dataSql = rs.getDate("data");
 		LocalDate data = dataSql.toLocalDate();
 		int numeroSessione = rs.getInt("numero_sessione");
-		String url = rs.getString("url");
+		String url = rs.getString("url_meeting");
 		
 		List<Ricetta> ricette = ricettaDAO.getBySessione(new Sessione(id, inPresenza, data, numeroSessione, url, corso));
 		

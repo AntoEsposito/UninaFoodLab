@@ -30,7 +30,7 @@ public class CategoriaDAO
 	private Categoria createCategoriaFromResultSet(ResultSet rs) throws SQLException 
 	{
 		int id = rs.getInt("id_categoria");
-		String nome = rs.getString("nome");
+		String nome = rs.getString("descrizione");
 		
 		return new Categoria(id, nome);
 	}
