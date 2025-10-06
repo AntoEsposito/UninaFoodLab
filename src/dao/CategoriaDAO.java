@@ -11,25 +11,27 @@ public class CategoriaDAO
 	
 	public Categoria getById(int id) 
 	{
-		Categoria categoria = null;
 		String query = "SELECT * FROM categoria WHERE id_categoria = ?";
 		
 		try (Connection conn = DatabaseConnection.getInstance().getConnection();
 			 PreparedStatement pstmt = conn.prepareStatement(query)) 
 		{
 			pstmt.setInt(1, id);
-			ResultSet rs = pstmt.executeQuery();
-			
-			if (rs.next()) 
+			try (ResultSet rs = pstmt.executeQuery())
 			{
-				String nome = rs.getString("nome");
-				categoria = new Categoria(id, nome);
+				if (rs.next()) {return createCategoriaFromResultSet(rs);}
 			}
-			
-			rs.close();
 		} 
 		catch (SQLException e) {e.printStackTrace();}
 		
-		return categoria;
+		return null;
+	}
+
+	private Categoria createCategoriaFromResultSet(ResultSet rs) throws SQLException 
+	{
+		int id = rs.getInt("id_categoria");
+		String nome = rs.getString("nome");
+		
+		return new Categoria(id, nome);
 	}
 }

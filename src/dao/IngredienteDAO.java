@@ -11,25 +11,27 @@ public class IngredienteDAO
 	
 	public Ingrediente getById(int id) 
 	{
-		Ingrediente ingrediente = null;
 		String query = "SELECT * FROM ingrediente WHERE id_ingrediente = ?";
 		
 		try (Connection conn = DatabaseConnection.getInstance().getConnection();
 			 PreparedStatement pstmt = conn.prepareStatement(query)) 
 		{
 			pstmt.setInt(1, id);
-			ResultSet rs = pstmt.executeQuery();
-			
-			if (rs.next()) 
+			try (ResultSet rs = pstmt.executeQuery())
 			{
-				String nome = rs.getString("nome");
-				ingrediente = new Ingrediente(id, nome);
+				if (rs.next()) {return createIngredienteFromResultSet(rs);}
 			}
-			
-			rs.close();
 		} 
 		catch (SQLException e) {e.printStackTrace();}
 		
-		return ingrediente;
+		return null;
+	}
+	
+	private Ingrediente createIngredienteFromResultSet(ResultSet rs) throws SQLException 
+	{	
+		int id = rs.getInt("id_ingrediente");
+		String nome = rs.getString("nome");
+		
+		return new Ingrediente(id, nome);
 	}
 }

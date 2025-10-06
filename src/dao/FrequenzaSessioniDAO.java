@@ -11,25 +11,27 @@ public class FrequenzaSessioniDAO
 	
 	public FrequenzaSessioni getById(int id) 
 	{
-		FrequenzaSessioni frequenza = null;
 		String query = "SELECT * FROM frequenza_sessioni WHERE id_frequenza = ?";
 		
 		try (Connection conn = DatabaseConnection.getInstance().getConnection();
 			 PreparedStatement pstmt = conn.prepareStatement(query)) 
 		{
 			pstmt.setInt(1, id);
-			ResultSet rs = pstmt.executeQuery();
-			
-			if (rs.next()) 
+			try (ResultSet rs = pstmt.executeQuery())
 			{
-				String descrizione = rs.getString("descrizione");
-				frequenza = new FrequenzaSessioni(id, descrizione);
+				if (rs.next()) {return createFrequenzaSessioniFromResultSet(rs);}
 			}
-			
-			rs.close();
 		} 
 		catch (SQLException e) {e.printStackTrace();}
 		
-		return frequenza;
+		return null;
+	}
+
+	private FrequenzaSessioni createFrequenzaSessioniFromResultSet(ResultSet rs) throws SQLException 
+	{
+		int id = rs.getInt("id_frequenza");
+		String descrizione = rs.getString("descrizione");
+		
+		return new FrequenzaSessioni(id, descrizione);
 	}
 }
