@@ -33,9 +33,15 @@ public class Sessione
 	{
 		this(id, inPresenza, data, numeroSessione, urlMeeting, null, new ArrayList<Ricetta>());
 	}
+	public Sessione(boolean inPresenza, LocalDate data, int numeroSessione, String urlMeeting, Corso corso) 
+	{
+		this(-1, inPresenza, data, numeroSessione, urlMeeting, corso, new ArrayList<Ricetta>()); // costruttore per inserimento nuova sessione (id = -1)
+	}
 	
 
 	public int getId() {return id;}
+	
+	public void setId(int id) {this.id = id;}
 	
 	public boolean isInPresenza() {return inPresenza;}
 	

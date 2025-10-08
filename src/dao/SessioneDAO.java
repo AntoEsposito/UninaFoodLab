@@ -39,6 +39,38 @@ public class SessioneDAO
 		return listaSessioni;
 	}
 	
+	public boolean addSessione(Sessione sessione) 
+	{
+		String query = "INSERT INTO sessione (in_presenza, data, numero_sessione, url_meeting, id_corso) VALUES (?, ?, ?, ?, ?)";
+		boolean added = false;
+		
+		try (Connection conn = DatabaseConnection.getInstance().getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) 
+		{
+			pstmt.setBoolean(1, sessione.isInPresenza());
+			pstmt.setDate(2, Date.valueOf(sessione.getData()));
+			pstmt.setInt(3, sessione.getNumeroSessione());
+			pstmt.setString(4, sessione.getUrlMeeting());
+			pstmt.setInt(5, sessione.getCorsoDiAppartenenza().getId());
+			
+			int affectedRows = pstmt.executeUpdate();
+			if (affectedRows > 0) 
+			{
+				try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) 
+				{
+					if (generatedKeys.next()) 
+					{
+						sessione.setId(generatedKeys.getInt(1));
+						added = true;
+					}
+				}
+			}
+		} 
+		catch (SQLException e) {e.printStackTrace();}
+		
+		return added;
+	}
+	
 	private Sessione createSessioneFromResultSetAndCorso(ResultSet rs, Corso corso) throws SQLException
 	{
 		int id = rs.getInt("id_sessione");

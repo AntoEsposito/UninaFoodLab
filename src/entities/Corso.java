@@ -29,9 +29,14 @@ public class Corso
 	{
 		this(id, dataInizio, numeroSessioni, frequenza, categoria, chef, new ArrayList<>());
 	}
-
+	public Corso (LocalDate dataInizio, int numeroSessioni, FrequenzaSessioni frequenza, Categoria categoria, Chef chef, List<Sessione> sessioni) 
+	{
+		this(-1, dataInizio, numeroSessioni, frequenza, categoria, chef, sessioni); // costruttore per inserimento nuovo corso (id = -1)
+	}
 	
 	public int getId() {return id;}
+	
+	public void setId(int id) {this.id = id;}
 	
 	public LocalDate getDataInizio() {return dataInizio;}
 	

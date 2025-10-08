@@ -45,6 +45,38 @@ public class CorsoDAO
 		return corsi;
 	}
 	
+	public boolean addCorso(Corso corso) 
+	{
+		String query = "INSERT INTO corso (data_inizio, numero_sessioni, id_frequenza, id_categoria, id_chef) VALUES (?, ?, ?, ?, ?)";
+		boolean added = false;
+		
+		try (Connection conn = DatabaseConnection.getInstance().getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) 
+		{
+			pstmt.setDate(1, Date.valueOf(corso.getDataInizio()));
+			pstmt.setInt(2, corso.getNumeroSessioni());
+			pstmt.setInt(3, corso.getFrequenza().getId());
+			pstmt.setInt(4, corso.getCategoria().getId());
+			pstmt.setInt(5, corso.getChef().getId());
+			
+			int affectedRows = pstmt.executeUpdate();
+			if (affectedRows > 0) 
+			{
+				try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) 
+				{
+					if (generatedKeys.next()) 
+					{
+						corso.setId(generatedKeys.getInt(1));
+						added = true;
+					}
+				}
+			}
+		} 
+		catch (SQLException e) {e.printStackTrace();}
+		
+		return added;
+	}
+	
 	private Corso createCorsoFromResultSetAndChef(ResultSet rs, Chef chef) throws SQLException
 	{
 		int id = rs.getInt("id_corso");
