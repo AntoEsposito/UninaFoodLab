@@ -45,6 +45,26 @@ public class CorsoDAO
 		return corsi;
 	}
 	
+	public List<Corso> getByChefAndCategoria(Chef chef, Categoria categoria) 
+	{
+		String query = "SELECT * FROM corso WHERE id_chef = ? AND id_categoria = ? ";
+		List<Corso> corsi = new ArrayList<>();
+		
+		try (Connection conn = DatabaseConnection.getInstance().getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(query)) 
+		{
+			pstmt.setInt(1, chef.getId());
+			pstmt.setInt(2, categoria.getId());
+			try (ResultSet rs = pstmt.executeQuery())
+			{
+				while (rs.next()) {corsi.add(createCorsoFromResultSetAndChef(rs, chef));}
+			}
+		} 
+		catch (SQLException e) {e.printStackTrace();}
+		
+		return corsi;
+	}
+	
 	public boolean addCorso(Corso corso) 
 	{
 		String query = "INSERT INTO corso (data_inizio, numero_sessioni, id_frequenza, id_categoria, id_chef) VALUES (?, ?, ?, ?, ?)";
