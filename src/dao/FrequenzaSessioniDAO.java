@@ -3,6 +3,8 @@ package dao;
 import connection.DatabaseConnection;
 import entities.FrequenzaSessioni;
 import java.sql.*;
+import java.util.List;
+import java.util.ArrayList;
 
 public class FrequenzaSessioniDAO 
 {
@@ -26,7 +28,23 @@ public class FrequenzaSessioniDAO
 		
 		return null;
 	}
-
+	
+	public List<FrequenzaSessioni> getAll() 
+	{
+		String query = "SELECT * FROM frequenza_sessioni";
+		List<FrequenzaSessioni> listaFrequenze = new ArrayList<>();
+		
+		try (Connection conn = DatabaseConnection.getInstance().getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(query);
+			 ResultSet rs = pstmt.executeQuery()) 
+		{
+			while (rs.next()) {listaFrequenze.add(createFrequenzaSessioniFromResultSet(rs));}
+		} 
+		catch (SQLException e) {e.printStackTrace();}
+		
+		return listaFrequenze;
+	}
+	
 	private FrequenzaSessioni createFrequenzaSessioniFromResultSet(ResultSet rs) throws SQLException 
 	{
 		int id = rs.getInt("id_frequenza");

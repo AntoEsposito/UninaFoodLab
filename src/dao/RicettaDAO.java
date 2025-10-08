@@ -3,9 +3,9 @@ package dao;
 import connection.DatabaseConnection;
 import entities.Ricetta;
 import entities.Sessione;
-
 import java.sql.*;
 import java.util.List;
+import java.util.ArrayList;
 
 public class RicettaDAO
 {
@@ -46,6 +46,22 @@ public class RicettaDAO
 			{
 				while (rs.next()) {listaRicette.add(createRicettaFromResultSet(rs));}
 			}
+		} 
+		catch (SQLException e) {e.printStackTrace();}
+		
+		return listaRicette;
+	}
+	
+	public List<Ricetta> getAll() 
+	{
+		String query = "SELECT * FROM ricetta";
+		List<Ricetta> listaRicette = new ArrayList<>();
+		
+		try (Connection conn = DatabaseConnection.getInstance().getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(query);
+			 ResultSet rs = pstmt.executeQuery()) 
+		{
+			while (rs.next()) {listaRicette.add(createRicettaFromResultSet(rs));}
 		} 
 		catch (SQLException e) {e.printStackTrace();}
 		

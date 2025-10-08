@@ -3,6 +3,8 @@ package dao;
 import connection.DatabaseConnection;
 import entities.Categoria;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CategoriaDAO 
 {
@@ -26,7 +28,23 @@ public class CategoriaDAO
 		
 		return null;
 	}
-
+	
+	public List<Categoria> getAll() 
+	{
+		String query = "SELECT * FROM categoria";
+		List<Categoria> listaCategorie = new ArrayList<>();
+		
+		try (Connection conn = DatabaseConnection.getInstance().getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(query);
+			 ResultSet rs = pstmt.executeQuery()) 
+		{
+			while (rs.next()) {listaCategorie.add(createCategoriaFromResultSet(rs));}
+		} 
+		catch (SQLException e) {e.printStackTrace();}
+		
+		return listaCategorie;
+	}
+	
 	private Categoria createCategoriaFromResultSet(ResultSet rs) throws SQLException 
 	{
 		int id = rs.getInt("id_categoria");
