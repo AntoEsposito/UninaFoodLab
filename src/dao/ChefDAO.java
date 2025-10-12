@@ -16,6 +16,24 @@ public class ChefDAO
 		corsoDAO = new CorsoDAO();
 	}
 	
+	public Chef getById(int id) 
+	{
+		String query = "SELECT * FROM chef WHERE id_chef = ? ";
+		Chef chef = null;
+		
+		try (Connection conn = DatabaseConnection.getInstance().getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(query)) 
+		{
+			pstmt.setInt(1, id);
+			try (ResultSet rs = pstmt.executeQuery())
+			{
+				if (rs.next()) chef = createChefFromResultSet(rs);
+			}
+		} 
+		catch (SQLException e) {e.printStackTrace();}
+		
+		return chef;
+	}
 	
 	public Chef getByUsernameAndPassword(String username, String password) 
 	{

@@ -39,6 +39,34 @@ public class SessioneDAO
 		return listaSessioni;
 	}
 	
+	public Sessione getById(int idSessione)
+	{
+		String query = "SELECT * FROM sessione WHERE id_sessione = ?";
+		
+		try (Connection conn = DatabaseConnection.getInstance().getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(query))
+		{
+			pstmt.setInt(1, idSessione);
+			try (ResultSet rs = pstmt.executeQuery())
+			{
+				if (rs.next())
+				{
+					// Recupera il corso associato
+					int idCorso = rs.getInt("id_corso");
+					CorsoDAO corsoDAO = new CorsoDAO();
+					Corso corso = corsoDAO.getById(idCorso);
+					
+					if (corso != null) {
+						return createSessioneFromResultSetAndCorso(rs, corso);
+					}
+				}
+			}
+		}
+		catch (SQLException e) {e.printStackTrace();}
+		
+		return null;
+	}
+	
 	public boolean addSessione(Sessione sessione) 
 	{
 		String query = "INSERT INTO sessione (in_presenza, data, numero_sessione, url_meeting, id_corso) VALUES (?, ?, ?, ?, ?)";

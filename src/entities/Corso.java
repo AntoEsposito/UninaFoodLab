@@ -42,7 +42,7 @@ public class Corso
 	
 	public int getNumeroSessioni() {return numeroSessioni;}
 	
-	public FrequenzaSessioni getFrequenza() {return frequenza;}
+	public FrequenzaSessioni getFrequenzaSessioni() {return frequenza;}
 	
 	public Categoria getCategoria() {return categoria;}
 	

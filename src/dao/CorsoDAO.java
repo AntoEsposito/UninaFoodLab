@@ -25,6 +25,29 @@ public class CorsoDAO
 		sessioneDAO = new SessioneDAO();
 	}
 	
+	public Corso getById(int id) 
+	{
+		String query = "SELECT * FROM corso WHERE id_corso = ? ";
+		Corso corso = null;
+		
+		try (Connection conn = DatabaseConnection.getInstance().getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(query)) 
+		{
+			pstmt.setInt(1, id);
+			try (ResultSet rs = pstmt.executeQuery())
+			{
+				if (rs.next()) 
+				{
+					int idChef = rs.getInt("id_chef");
+					Chef chef = new ChefDAO().getById(idChef);
+					corso = createCorsoFromResultSetAndChef(rs, chef);
+				}
+			}
+		} 
+		catch (SQLException e) {e.printStackTrace();}
+		
+		return corso;
+	}
 	
 	public List<Corso> getByChef(Chef chef) 
 	{
@@ -75,7 +98,7 @@ public class CorsoDAO
 		{
 			pstmt.setDate(1, Date.valueOf(corso.getDataInizio()));
 			pstmt.setInt(2, corso.getNumeroSessioni());
-			pstmt.setInt(3, corso.getFrequenza().getId());
+			pstmt.setInt(3, corso.getFrequenzaSessioni().getId());
 			pstmt.setInt(4, corso.getCategoria().getId());
 			pstmt.setInt(5, corso.getChef().getId());
 			
