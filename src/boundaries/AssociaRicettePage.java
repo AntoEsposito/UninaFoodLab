@@ -1,12 +1,13 @@
 package boundaries;
 
-import controller.Controller;
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 import boundaries.colors.AppColor;
+import control.Controller;
+
 import java.awt.*;
 import java.util.List;
 

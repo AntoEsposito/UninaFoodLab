@@ -1,11 +1,11 @@
 package boundaries;
 
-import controller.Controller;
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.border.EmptyBorder;
 
 import boundaries.colors.AppColor;
+import control.Controller;
 
 
 public class LoginPage extends JFrame 

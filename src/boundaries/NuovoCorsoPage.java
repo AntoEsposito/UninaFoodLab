@@ -1,11 +1,12 @@
 package boundaries;
 
-import controller.Controller;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import boundaries.colors.AppColor;
+import control.Controller;
+
 import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

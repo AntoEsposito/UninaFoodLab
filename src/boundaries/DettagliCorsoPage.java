@@ -1,9 +1,10 @@
 package boundaries;
 
-import controller.Controller;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import boundaries.colors.AppColor;
+import control.Controller;
+
 import java.awt.*;
 import javax.swing.border.TitledBorder;
 

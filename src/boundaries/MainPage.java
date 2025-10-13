@@ -1,9 +1,10 @@
 package boundaries;
 
-import controller.Controller;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import boundaries.colors.AppColor;
+import control.Controller;
+
 import java.awt.*;
 
 
@@ -78,6 +79,9 @@ public class MainPage extends JFrame
         
         // tab per visualizzare corsi
         tabbedPane.addTab("Visualizza Corsi", controller.creaVisualizzaCorsiPage());
+        
+        // tab per visualizzare report mensile
+        tabbedPane.addTab("Report Mensile", controller.creaVisualizzaReportPage());
         
         getContentPane().add(tabbedPane, BorderLayout.CENTER);
     }

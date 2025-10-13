@@ -1,8 +1,9 @@
-package controller;
+package control;
 
 import dao.*;
 import entities.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JComboBox;
@@ -43,7 +44,9 @@ public class Controller
     }
     
     
-    // METODI LOGIN PAGE
+
+    // METODI PER LoginPage
+    // Metodi pubblici
     public boolean autenticaChef(String username, String password) 
     {
         Chef chef = chefDAO.getByUsernameAndPassword(username, password);
@@ -59,7 +62,8 @@ public class Controller
     }
     
     
-    // METODI PER MAIN PAGE
+    // METODI PER MainPage
+    // Metodi pubblici
     public String getNomeChefAutenticato() 
 	{
 		if (chefAutenticato != null)
@@ -77,6 +81,11 @@ public class Controller
 		return new VisualizzaCorsiPage(this);
 	}
     
+    public JPanel creaVisualizzaReportPage() 
+	{
+		return new VisualizzaReportPage(this);
+	}
+    
     public void logout() 
     {
         this.chefAutenticato = null;
@@ -87,34 +96,29 @@ public class Controller
 		new LoginPage(this).setVisible(true);
 	}
     
+    // Metodi privati
+    private void setVisibleMainPage()
+    {
+    	new MainPage(this).setVisible(true);
+    }
+    
     
     // METODI PER NuovoCorsoPage
+    // Metodi pubblici
     public void caricaCategorieInComboBox(JComboBox<String> comboBox)
     {
         comboBox.removeAllItems();
         List<Categoria> categorie = getAllCategorie();
-        for (Categoria categoria : categorie) {
-            comboBox.addItem(categoria.getDescrizione());
-        }
-    }
-    
-    public void caricaCategorieConFiltroInComboBox(JComboBox<String> comboBox)
-    {
-        comboBox.removeAllItems();
-        comboBox.addItem("Tutte le categorie");
-        List<Categoria> categorie = getAllCategorie();
-        for (Categoria categoria : categorie) {
-            comboBox.addItem(categoria.getDescrizione());
-        }
+        
+        for (Categoria categoria : categorie) comboBox.addItem(categoria.getDescrizione());
     }
     
     public void caricaFrequenzeInComboBox(JComboBox<String> comboBox)
     {
         comboBox.removeAllItems();
         List<FrequenzaSessioni> frequenze = getAllFrequenze();
-        for (FrequenzaSessioni frequenza : frequenze) {
-            comboBox.addItem(frequenza.getDescrizione());
-        }
+        
+        for (FrequenzaSessioni frequenza : frequenze) comboBox.addItem(frequenza.getDescrizione());
     }
     
     public boolean creaCorsoByIndex(LocalDate dataInizio, int numeroSessioni, int frequenzaIndex, int categoriaIndex)
@@ -123,7 +127,6 @@ public class Controller
         Categoria categoria = getCategoriaByIndex(categoriaIndex);
         
         if (frequenza == null || categoria == null) return false;
-        
         return creaCorso(dataInizio, numeroSessioni, frequenza, categoria);
     }
     
@@ -136,10 +139,11 @@ public class Controller
         LocalDate dataSessione = dataInizio;
         int idCorso = getIdCorso(corso);
         
-        for (int i = 0; i < modalitaInPresenza.length; i++) {
+        for (int i = 0; i < modalitaInPresenza.length; i++) 
+        {
             boolean inPresenza = modalitaInPresenza[i];
             int numeroSessione = i + 1;
-            String urlMeeting = inPresenza ? null : "https://meet.uninafoodlab.it/" + idCorso + "/" + numeroSessione;
+            String urlMeeting = inPresenza ? null : "https://meet.uninafoodlab/demo.com/" + idCorso + "/" + numeroSessione;
             
             boolean aggiunta = aggiungiSessione(corso, inPresenza, dataSessione, numeroSessione, urlMeeting);
             if (!aggiunta) return false;
@@ -150,8 +154,66 @@ public class Controller
         return true;
     }
     
+    // Metodi privati
+    private boolean creaCorso(LocalDate dataInizio, int numeroSessioni, FrequenzaSessioni frequenza, Categoria categoria) 
+    {
+        if (chefAutenticato == null) return false;
+        
+        Corso nuovoCorso = new Corso(dataInizio, numeroSessioni, frequenza, categoria, chefAutenticato, new ArrayList<>());
+        return corsoDAO.addCorso(nuovoCorso);
+    }
+    
+    private Corso getUltimoCorsoCreato()
+    {
+        List<Corso> corsi = getCorsiChefAutenticato();
+        if (!corsi.isEmpty()) return corsi.get(corsi.size() - 1);
+        return null;
+    }
+    
+    private int getIdCorso(Corso corso)
+    {
+        return corso != null ? corso.getId() : -1;
+    }
+    
+    private int calcolaGiorniIntervalloByIndex(int frequenzaIndex)
+    {
+        FrequenzaSessioni frequenza = getFrequenzaByIndex(frequenzaIndex);
+        return calcolaGiorniIntervallo(frequenza);
+    }
+    
+    private int calcolaGiorniIntervallo(FrequenzaSessioni frequenza)
+    {
+        if (frequenza == null) return 7; // improbabile, default a settimanale
+        
+        String desc = frequenza.getDescrizione().toLowerCase();
+        
+        if (desc.contains("giornaliero")) return 1;
+        if (desc.contains("ogni due giorni")) return 2;
+        if (desc.contains("settimanale")) return 7;
+        if (desc.contains("ogni 2 settimane")) return 14;
+        if (desc.contains("mensile")) return 30;
+        
+        return 7;
+    }
+    
+    private boolean aggiungiSessione(Corso corso, boolean inPresenza, LocalDate data, int numeroSessione, String urlMeeting) 
+    {
+        Sessione nuovaSessione = new Sessione(inPresenza, data, numeroSessione, urlMeeting, corso);
+        return sessioneDAO.addSessione(nuovaSessione);
+    }
+    
     
     // METODI PER VisualizzaCorsiPage
+    // Metodi pubblici
+    public void caricaCategorieConFiltroInComboBox(JComboBox<String> comboBox)
+    {
+        comboBox.removeAllItems();
+        comboBox.addItem("Tutte le categorie");
+        List<Categoria> categorie = getAllCategorie();
+        
+        for (Categoria categoria : categorie) comboBox.addItem(categoria.getDescrizione());
+    }
+    
     public void caricaCorsiInTabella(DefaultTableModel tableModel, int indiceCategoria) 
     {
         tableModel.setRowCount(0);
@@ -190,6 +252,23 @@ public class Controller
         }
 	}
     
+    // Metodi privati
+    private Categoria getCategoriaByIndice(int indice)
+	{
+		List<Categoria> categorie = getAllCategorie();
+		if (indice >= 0 && indice < categorie.size()) return categorie.get(indice);
+		else return null;
+	}
+    
+    private List<Corso> getCorsiChefAutenticatoPerCategoria(Categoria categoria) 
+    {
+        if (chefAutenticato == null) return new ArrayList<>();
+        return corsoDAO.getByChefAndCategoria(chefAutenticato, categoria);
+    }
+    
+    
+    // METODI PER DettagliCorsoPage 
+    // Metodi pubblici
     public void caricaSessioniInDettagliCorsoPage(DefaultTableModel sessioniTableModel) 
     {
         sessioniTableModel.setRowCount(0);
@@ -200,7 +279,7 @@ public class Controller
             String modalita = sessione.isInPresenza() ? "In Presenza" : "Online";
             String url = sessione.getUrlMeeting() == null ? "N/A" : sessione.getUrlMeeting();
             
-            List<Ricetta> ricette = getRicetteSessione(sessione);
+            List<Ricetta> ricette = getRicetteAssociateASessione(sessione);
             String numRicetteString = ricette.size() + " ricetta/e";
             
             Object[] riga = 
@@ -259,8 +338,15 @@ public class Controller
 	    else JOptionPane.showMessageDialog(paginaDettagliCorso, "Non è possibile associare ricette a sessioni online.", "Operazione non consentita", JOptionPane.WARNING_MESSAGE);
 	}
     
+    // Metodi privati
+    private List<Sessione> getSessioniCorso(Corso corso) 
+    {
+        return sessioneDAO.getByCorso(corso);
+    }
+    
     
     // METODI PER AssociaRicettePage
+    // Metodi pubblici
     public String getInfoSessioneById(int sessioneId)
     {
         Sessione sessione = getSessioneById(sessioneId);
@@ -270,26 +356,24 @@ public class Controller
     public List<String> getNomiRicetteDisponibiliPerSessione(int sessioneId)
     {
         Sessione sessione = getSessioneById(sessioneId);
-        if (sessione == null) return new java.util.ArrayList<>();
+        if (sessione == null) return new ArrayList<>();
         
         List<Ricetta> disponibili = getRicetteDisponibiliPerSessione(sessione);
-        List<String> nomi = new java.util.ArrayList<>();
-        for (Ricetta r : disponibili) {
-            nomi.add(r.getNome());
-        }
+        List<String> nomi = new ArrayList<>();
+        
+        for (Ricetta r : disponibili) nomi.add(r.getNome());
         return nomi;
     }
     
     public List<String> getNomiRicetteAssociateASessione(int sessioneId)
     {
         Sessione sessione = getSessioneById(sessioneId);
-        if (sessione == null) return new java.util.ArrayList<>();
+        if (sessione == null) return new ArrayList<>();
         
-        List<Ricetta> associate = getRicetteSessione(sessione);
-        List<String> nomi = new java.util.ArrayList<>();
-        for (Ricetta r : associate) {
-            nomi.add(r.getNome());
-        }
+        List<Ricetta> associate = getRicetteAssociateASessione(sessione);
+        List<String> nomi = new ArrayList<>();
+        
+        for (Ricetta r : associate) nomi.add(r.getNome());
         return nomi;
     }
     
@@ -301,18 +385,20 @@ public class Controller
         List<Ricetta> tutteRicette = getAllRicette();
         boolean tutteAssociate = true;
         
-        for (String nome : nomiRicette) {
+        for (String nome : nomiRicette) 
+        {
             Ricetta ricettaDaAssociare = null;
-            for (Ricetta r : tutteRicette) {
-                if (r.getNome().equals(nome)) {
+            for (Ricetta r : tutteRicette) 
+            {
+                if (r.getNome().equals(nome)) 
+                {
                     ricettaDaAssociare = r;
                     break;
                 }
             }
-            if (ricettaDaAssociare != null) {
-                if (!associaRicettaASessione(sessione, ricettaDaAssociare)) {
-                    tutteAssociate = false;
-                }
+            if (ricettaDaAssociare != null) 
+            {
+                if (!associaRicettaASessione(sessione, ricettaDaAssociare)) tutteAssociate = false;
             }
         }
         
@@ -327,20 +413,19 @@ public class Controller
         List<Ricetta> tutteRicette = getAllRicette();
         Ricetta ricettaDaAssociare = null;
         
-        for (Ricetta r : tutteRicette) {
-            if (r.getNome().equals(nomeRicetta)) {
+        for (Ricetta r : tutteRicette) 
+        {
+            if (r.getNome().equals(nomeRicetta)) 
+            {
                 ricettaDaAssociare = r;
                 break;
             }
         }
         
-        if (ricettaDaAssociare != null) {
-            return associaRicettaASessione(sessione, ricettaDaAssociare);
-        }
+        if (ricettaDaAssociare != null) return associaRicettaASessione(sessione, ricettaDaAssociare);
         
         return false;
     }
-    
     
     public boolean rimuoviRicettaDaSessioneByNome(int sessioneId, String nomeRicetta)
     {
@@ -350,8 +435,10 @@ public class Controller
         List<Ricetta> tutteRicette = getAllRicette();
         Ricetta ricettaDaRimuovere = null;
         
-        for (Ricetta r : tutteRicette) {
-            if (r.getNome().equals(nomeRicetta)) {
+        for (Ricetta r : tutteRicette) 
+        {
+            if (r.getNome().equals(nomeRicetta)) 
+            {
                 ricettaDaRimuovere = r;
                 break;
             }
@@ -364,125 +451,7 @@ public class Controller
         return false;
     }
     
-    private boolean rimuoviRicettaDaSessione(Sessione sessione, Ricetta ricetta) 
-	{
-		return realizzazioneRicettaDAO.rimuoviRicettaDaSessione(sessione, ricetta);
-	}
-    
-    
-    // METODI PRIVATI - GESTIONE CATEGORIE
-    private List<Categoria> getAllCategorie() 
-    {
-        return categoriaDAO.getAll();
-    }
-    
-    private Categoria getCategoriaByIndex(int index)
-    {
-        List<Categoria> categorie = getAllCategorie();
-        if (index >= 0 && index < categorie.size()) {
-            return categorie.get(index);
-        }
-        return null;
-    }
-    
-    private Categoria getCategoriaByIndice(int indice)
-	{
-		List<Categoria> categorie = getAllCategorie();
-		if (indice >= 0 && indice < categorie.size()) return categorie.get(indice);
-		else return null;
-	}
-    
-    
-    // METODI PRIVATI - GESTIONE FREQUENZE
-    private List<FrequenzaSessioni> getAllFrequenze() 
-    {
-        return frequenzaSessioniDAO.getAll();
-    }
-    
-    private FrequenzaSessioni getFrequenzaByIndex(int index)
-    {
-        List<FrequenzaSessioni> frequenze = getAllFrequenze();
-        if (index >= 0 && index < frequenze.size()) {
-            return frequenze.get(index);
-        }
-        return null;
-    }
-    
-    private int calcolaGiorniIntervalloByIndex(int frequenzaIndex)
-    {
-        FrequenzaSessioni frequenza = getFrequenzaByIndex(frequenzaIndex);
-        return calcolaGiorniIntervallo(frequenza);
-    }
-    
-    private int calcolaGiorniIntervallo(FrequenzaSessioni frequenza)
-    {
-        if (frequenza == null) return 7;
-        
-        String desc = frequenza.getDescrizione().toLowerCase();
-        
-        if (desc.contains("giornalier")) return 1;
-        if (desc.contains("settimanal")) return 7;
-        if (desc.contains("bisettimanal")) return 14;
-        if (desc.contains("mensil")) return 30;
-        
-        return 7;
-    }
-    
-    
-    // METODI PRIVATI - GESTIONE CORSI
-    private boolean creaCorso(LocalDate dataInizio, int numeroSessioni, FrequenzaSessioni frequenza, Categoria categoria) 
-    {
-        if (chefAutenticato == null) return false;
-        
-        Corso nuovoCorso = new Corso(dataInizio, numeroSessioni, frequenza, categoria, chefAutenticato, new java.util.ArrayList<>());
-        return corsoDAO.addCorso(nuovoCorso);
-    }
-    
-    private Corso getCorsoById(int id) 
-	{
-		return corsoDAO.getById(id);
-	}
-    
-    private List<Corso> getCorsiChefAutenticato() 
-    {
-        if (chefAutenticato == null) return new java.util.ArrayList<>();
-        return corsoDAO.getByChef(chefAutenticato);
-    }
-    
-    private List<Corso> getCorsiChefAutenticatoPerCategoria(Categoria categoria) 
-    {
-        if (chefAutenticato == null) return new java.util.ArrayList<>();
-        return corsoDAO.getByChefAndCategoria(chefAutenticato, categoria);
-    }
-    
-    private int getIdCorso(Corso corso)
-    {
-        return corso != null ? corso.getId() : -1;
-    }
-    
-    private Corso getUltimoCorsoCreato()
-    {
-        List<Corso> corsi = getCorsiChefAutenticato();
-        if (!corsi.isEmpty()) {
-            return corsi.get(corsi.size() - 1);
-        }
-        return null;
-    }
-    
-    
-
-    // METODI PRIVATI - GESTIONE SESSIONI
-    private boolean aggiungiSessione(Corso corso, boolean inPresenza, LocalDate data, int numeroSessione, String urlMeeting) 
-    {
-        Sessione nuovaSessione = new Sessione(inPresenza, data, numeroSessione, urlMeeting, corso);
-        return sessioneDAO.addSessione(nuovaSessione);
-    }
-    
-    private List<Sessione> getSessioniCorso(Corso corso) 
-    {
-        return sessioneDAO.getByCorso(corso);
-    }
-    
+    // Metodi privati
     private Sessione getSessioneById(int id)
     {
         return sessioneDAO.getById(id);
@@ -494,50 +463,151 @@ public class Controller
         return "Sessione N° " + sessione.getNumeroSessione() + " - Data: " + sessione.getData();
     }
     
-    
-    // METODI PRIVATI - GESTIONE RICETTE
-    private List<Ricetta> getAllRicette() 
+    private List<Ricetta> getRicetteDisponibiliPerSessione(Sessione sessione)
     {
-        return ricettaDAO.getAll();
-    }
-    
-    private List<Ricetta> getRicetteSessione(Sessione sessione)
-    {
-        return ricettaDAO.getBySessione(sessione);
+        List<Ricetta> tutteRicette = getAllRicette();
+        List<Ricetta> ricetteAssociate = getRicetteAssociateASessione(sessione);
+        List<Ricetta> disponibili = new ArrayList<>();
+        
+        for (Ricetta r : tutteRicette) 
+        {
+            boolean trovata = false;
+            for (Ricetta ra : ricetteAssociate) 
+            {
+                if (r.getId() == ra.getId()) 
+                {
+                    trovata = true;
+                    break;
+                }
+            }
+            if (!trovata) disponibili.add(r);
+        }
+        return disponibili;
     }
     
     private boolean associaRicettaASessione(Sessione sessione, Ricetta ricetta) 
     {
         return realizzazioneRicettaDAO.associaRicettaASessione(sessione, ricetta);
     }
-   
-    private List<Ricetta> getRicetteDisponibiliPerSessione(Sessione sessione)
+    
+    private boolean rimuoviRicettaDaSessione(Sessione sessione, Ricetta ricetta) 
+	{
+		return realizzazioneRicettaDAO.rimuoviRicettaDaSessione(sessione, ricetta);
+	}
+    
+    
+    // ============================================================================
+    // METODI PER VisualizzaReportPage
+    // Metodi pubblici
+    public int[] generaDatiReportMensile(int mese, int anno) 
     {
-        List<Ricetta> tutteRicette = getAllRicette();
-        List<Ricetta> ricetteAssociate = getRicetteSessione(sessione);
-        List<Ricetta> disponibili = new java.util.ArrayList<>();
+        if (chefAutenticato == null) return null;
         
-        for (Ricetta r : tutteRicette) {
-            boolean trovata = false;
-            for (Ricetta ra : ricetteAssociate) {
-                if (r.getId() == ra.getId()) {
-                    trovata = true;
-                    break;
+        // Recupera tutti i corsi dello chef autenticato
+        List<Corso> tuttiCorsi = getCorsiChefAutenticato();
+        List<Corso> corsiDelMese = new ArrayList<>();
+        
+        // Filtra i corsi che iniziano nel mese/anno selezionato
+        for (Corso corso : tuttiCorsi) 
+        {
+            LocalDate dataInizio = corso.getDataInizio();
+            if (dataInizio.getYear() == anno && dataInizio.getMonthValue() == mese) corsiDelMese.add(corso);
+        }
+        if (corsiDelMese.isEmpty()) return new int[]{0, 0, 0, 0, 0, 0};
+        
+        int numCorsi = corsiDelMese.size();
+        int numSessioniOnline = 0;
+        int numSessioniPratiche = 0;
+        int totaleRicette = 0;
+        int maxRicette = 0;
+        int minRicette = Integer.MAX_VALUE;
+        
+        // Analizza le sessioni di ogni corso
+        for (Corso corso : corsiDelMese) 
+        {
+            List<Sessione> sessioni = getSessioniCorso(corso);
+            
+            for (Sessione sessione : sessioni) 
+            {
+                if (sessione.isInPresenza()) 
+                {
+                    numSessioniPratiche++;
+                    
+                    // Conta le ricette realizzate in questa sessione pratica
+                    List<Ricetta> ricette = getRicetteAssociateASessione(sessione);
+                    int numRicette = ricette.size();
+                    
+                    totaleRicette += numRicette;
+                    
+                    if (numRicette > maxRicette) maxRicette = numRicette;
+                    if (numRicette < minRicette) minRicette = numRicette;
                 }
-            }
-            if (!trovata) {
-                disponibili.add(r);
+                else numSessioniOnline++;
             }
         }
         
-        return disponibili;
+        // Calcola la media delle ricette (moltiplicata per 100 per mantenerla come int)
+        int mediaRicette = 0;
+        if (numSessioniPratiche > 0) mediaRicette = (totaleRicette * 100) / numSessioniPratiche;
+        
+        // Se non ci sono sessioni pratiche, resetta i valori min/max
+        if (numSessioniPratiche == 0) 
+        {
+            minRicette = 0;
+            maxRicette = 0;
+        }
+
+        return new int[]{numCorsi, numSessioniOnline, numSessioniPratiche, mediaRicette, maxRicette, minRicette};
     }
     
     
-    
-    // METODI PRIVATI - GESTIONE PAGINE
-    private void setVisibleMainPage()
+    // METODI PRIVATI CONDIVISI - GESTIONE ENTITÀ 
+    // Gestione Categorie
+    private List<Categoria> getAllCategorie() 
     {
-    	new MainPage(this).setVisible(true);
+        return categoriaDAO.getAll();
+    }
+    
+    private Categoria getCategoriaByIndex(int index)
+    {
+        List<Categoria> categorie = getAllCategorie();
+        if (index >= 0 && index < categorie.size()) return categorie.get(index);
+        return null;
+    }
+    
+    // Gestione Frequenze
+    private List<FrequenzaSessioni> getAllFrequenze() 
+    {
+        return frequenzaSessioniDAO.getAll();
+    }
+    
+    private FrequenzaSessioni getFrequenzaByIndex(int index)
+    {
+        List<FrequenzaSessioni> frequenze = getAllFrequenze();
+        if (index >= 0 && index < frequenze.size()) return frequenze.get(index);
+        return null;
+    }
+    
+    // Gestione Corsi
+    private Corso getCorsoById(int id) 
+	{
+		return corsoDAO.getById(id);
+	}
+    
+    private List<Corso> getCorsiChefAutenticato() 
+    {
+        if (chefAutenticato == null) return new ArrayList<>();
+        return corsoDAO.getByChef(chefAutenticato);
+    }
+    
+    // Gestione Ricette
+    private List<Ricetta> getAllRicette() 
+    {
+        return ricettaDAO.getAll();
+    }
+    
+    private List<Ricetta> getRicetteAssociateASessione(Sessione sessione)
+    {
+        return ricettaDAO.getBySessione(sessione);
     }
 }

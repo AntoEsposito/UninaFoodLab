@@ -26,5 +26,5 @@ public class Ricetta
 	
 	public String getNome() {return nome;}
 	
-	public List<Sessione> getSessioniInCuiVieneRealizata() {return new ArrayList<>(sessioniInCuiVieneRealizzata);}
+	public List<Sessione> getSessioniInCuiVieneRealizatta() {return new ArrayList<>(sessioniInCuiVieneRealizzata);}
 }

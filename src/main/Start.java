@@ -1,7 +1,7 @@
 package main;
 
-import controller.Controller;
 import boundaries.LoginPage;
+import control.Controller;
 
 public class Start 
 {
