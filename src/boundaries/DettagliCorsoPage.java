@@ -57,14 +57,13 @@ public class DettagliCorsoPage extends JDialog
         getContentPane().add(sessioniPanel, BorderLayout.CENTER);
         
         // tabella sessioni
-        String[] colonne = {"ID Sessione", "Data Sessione", "Tipo Sessione", "URL", "Ricette"};
+        String[] colonne = {"Numero Sessione", "Data Sessione", "Tipo Sessione", "URL", "Ricette"};
         sessioniTableModel = new DefaultTableModel(colonne, 0) // classe anonima per rendere non editabile la tabella
         {
             @Override
             public boolean isCellEditable(int row, int column) {return false;}
         };
         sessioniTable = new JTable(sessioniTableModel);
-        sessioniTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         sessioniTable.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         sessioniTable.setBackground(AppColor.BACKGROUND_GREY);
         sessioniTable.setForeground(AppColor.FOREGROUND_WHITE);
