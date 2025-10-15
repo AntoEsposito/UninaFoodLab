@@ -1,8 +1,9 @@
-package dao;
+package model.dao;
 
 import connection.DatabaseConnection;
-import entities.Chef;
-import entities.Corso;
+import model.entity.Chef;
+import model.entity.Corso;
+
 import java.sql.*;
 import java.util.List;
 

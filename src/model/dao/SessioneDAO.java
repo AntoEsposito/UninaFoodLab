@@ -1,9 +1,10 @@
-package dao;
+package model.dao;
 
 import connection.DatabaseConnection;
-import entities.Corso;
-import entities.Ricetta;
-import entities.Sessione;
+import model.entity.Corso;
+import model.entity.Ricetta;
+import model.entity.Sessione;
+
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;

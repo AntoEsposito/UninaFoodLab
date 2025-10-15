@@ -1,11 +1,12 @@
-package dao;
+package model.dao;
 
 import connection.DatabaseConnection;
-import entities.Corso;
-import entities.FrequenzaSessioni;
-import entities.Categoria;
-import entities.Chef;
-import entities.Sessione;
+import model.entity.Categoria;
+import model.entity.Chef;
+import model.entity.Corso;
+import model.entity.FrequenzaSessioni;
+import model.entity.Sessione;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

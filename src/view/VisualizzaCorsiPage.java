@@ -1,10 +1,11 @@
-package boundaries;
+package view;
 
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.DefaultTableModel;
-import boundaries.colors.AppColor;
+
 import control.Controller;
+import view.color.AppColor;
 
 import java.awt.*;
 

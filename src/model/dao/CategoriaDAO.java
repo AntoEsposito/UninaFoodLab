@@ -1,7 +1,8 @@
-package dao;
+package model.dao;
 
 import connection.DatabaseConnection;
-import entities.Categoria;
+import model.entity.Categoria;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

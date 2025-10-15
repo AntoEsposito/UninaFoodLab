@@ -1,8 +1,9 @@
-package dao;
+package model.dao;
 
 import connection.DatabaseConnection;
-import entities.Ricetta;
-import entities.Sessione;
+import model.entity.Ricetta;
+import model.entity.Sessione;
+
 import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;

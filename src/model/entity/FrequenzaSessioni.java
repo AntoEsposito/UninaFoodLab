@@ -1,4 +1,4 @@
-package entities;
+package model.entity;
 
 public class FrequenzaSessioni 
 {

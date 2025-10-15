@@ -1,8 +1,9 @@
-package dao;
+package model.dao;
 
 import connection.DatabaseConnection;
-import entities.Sessione;
-import entities.Ricetta;
+import model.entity.Ricetta;
+import model.entity.Sessione;
+
 import java.sql.*;
 
 public class RealizzazioneRicettaDAO 

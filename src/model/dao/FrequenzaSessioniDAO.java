@@ -1,7 +1,8 @@
-package dao;
+package model.dao;
 
 import connection.DatabaseConnection;
-import entities.FrequenzaSessioni;
+import model.entity.FrequenzaSessioni;
+
 import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;

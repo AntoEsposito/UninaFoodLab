@@ -1,4 +1,4 @@
-package boundaries.colors;
+package view.color;
 
 import java.awt.Color;
 public class AppColor

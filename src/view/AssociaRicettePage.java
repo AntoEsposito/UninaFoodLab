@@ -1,12 +1,12 @@
-package boundaries;
+package view;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
-import boundaries.colors.AppColor;
 import control.Controller;
+import view.color.AppColor;
 
 import java.awt.*;
 import java.util.List;
