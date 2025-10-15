@@ -141,6 +141,8 @@ public class VisualizzaReportPage extends JPanel
         chartPanel.setBackground(AppColor.BACKGROUND_GREY);
         chartPanel.setLayout(new BorderLayout());
         add(chartPanel, BorderLayout.CENTER);
+        
+        generaGrafico(0, 0, 0, 0, 0, 0); // grafico vuoto iniziale
     }
     
     
@@ -220,13 +222,9 @@ public class VisualizzaReportPage extends JPanel
         dataset.addValue(numCorsi, "Dati", "Corsi Totali");
         dataset.addValue(numSessioniOnline, "Dati", "Sessioni Online");
         dataset.addValue(numSessioniPratiche, "Dati", "Sessioni Pratiche");
-        
-        if (numSessioniPratiche > 0) 
-        {
-            dataset.addValue(mediaRicette, "Dati", "Media Ricette/Sessione");
-            dataset.addValue(maxRicette, "Dati", "Max Ricette/Sessione");
-            dataset.addValue(minRicette, "Dati", "Min Ricette/Sessione");
-        }
+        dataset.addValue(mediaRicette, "Dati", "Media Ricette/Sessione");
+        dataset.addValue(maxRicette, "Dati", "Max Ricette/Sessione");
+        dataset.addValue(minRicette, "Dati", "Min Ricette/Sessione");
         
         JFreeChart chart = ChartFactory.createBarChart(
             "Statistiche Attività del Periodo",
