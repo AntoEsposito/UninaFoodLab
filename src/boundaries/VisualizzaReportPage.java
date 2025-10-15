@@ -124,7 +124,7 @@ public class VisualizzaReportPage extends JPanel
         numCorsiLabel = creaLabelBianca("Numero totale di corsi tenuti: -");
         numSessioniOnlineLabel = creaLabelBianca("Numero di sessioni online: -");
         numSessioniPraticheLabel = creaLabelBianca("Numero di sessioni pratiche: -");
-        mediaRicetteLabel = creaLabelBianca("Numero medio di ricette realizzate: -");
+        mediaRicetteLabel = creaLabelBianca("Numero medio di ricette realizzate (solo sessioni pratiche): -");
         maxRicetteLabel = creaLabelBianca("Numero massimo di ricette realizzate: -");
         minRicetteLabel = creaLabelBianca("Numero minimo di ricette realizzate: -");
         reportPanel.add(numCorsiLabel);
@@ -171,9 +171,9 @@ public class VisualizzaReportPage extends JPanel
         int annoSelezionato = Integer.parseInt((String) annoComboBox.getSelectedItem());
         
         // Recupera i dati dal controller
-        int[] datiReport = controller.generaDatiReportMensile(meseSelezionato, annoSelezionato);
+        Object[] datiReport = controller.generaDatiReportMensile(meseSelezionato, annoSelezionato);
         
-        if (datiReport == null || datiReport[0] == 0) 
+        if (datiReport == null || ((int)datiReport[0]) == 0)
         {
             JOptionPane.showMessageDialog(this, "Nessun corso trovato per il periodo selezionato", "Informazione", JOptionPane.INFORMATION_MESSAGE);
             
@@ -181,12 +181,12 @@ public class VisualizzaReportPage extends JPanel
             return;
         }
         
-        int numCorsi = datiReport[0];
-        int numSessioniOnline = datiReport[1];
-        int numSessioniPratiche = datiReport[2];
-        double mediaRicette = datiReport[3] / 100; // viene passato moltiplicato per 100
-        int maxRicette = datiReport[4];
-        int minRicette = datiReport[5];
+        int numCorsi = (int) datiReport[0];
+        int numSessioniOnline = (int) datiReport[1];
+        int numSessioniPratiche = (int) datiReport[2];
+        double mediaRicette = (float) datiReport[3];
+        int maxRicette = (int) datiReport[4];
+        int minRicette = (int) datiReport[5];
         
         // Aggiorna le labels
         numCorsiLabel.setText("Numero totale di corsi tenuti: " + numCorsi);

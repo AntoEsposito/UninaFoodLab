@@ -496,10 +496,9 @@ public class Controller
 	}
     
     
-    // ============================================================================
     // METODI PER VisualizzaReportPage
     // Metodi pubblici
-    public int[] generaDatiReportMensile(int mese, int anno) 
+    public Object[] generaDatiReportMensile(int mese, int anno) 
     {
         if (chefAutenticato == null) return null;
         
@@ -513,7 +512,7 @@ public class Controller
             LocalDate dataInizio = corso.getDataInizio();
             if (dataInizio.getYear() == anno && dataInizio.getMonthValue() == mese) corsiDelMese.add(corso);
         }
-        if (corsiDelMese.isEmpty()) return new int[]{0, 0, 0, 0, 0, 0};
+        if (corsiDelMese.isEmpty()) return new Object[]{0, 0, 0, 0, 0, 0};
         
         int numCorsi = corsiDelMese.size();
         int numSessioniOnline = 0;
@@ -525,7 +524,7 @@ public class Controller
         // Analizza le sessioni di ogni corso
         for (Corso corso : corsiDelMese) 
         {
-            List<Sessione> sessioni = getSessioniCorso(corso);
+            List<Sessione> sessioni = getSessioniPerCorsoMeseEdAnno(corso, mese, anno);
             
             for (Sessione sessione : sessioni) 
             {
@@ -546,9 +545,8 @@ public class Controller
             }
         }
         
-        // Calcola la media delle ricette (moltiplicata per 100 per mantenerla come int)
-        int mediaRicette = 0;
-        if (numSessioniPratiche > 0) mediaRicette = (totaleRicette * 100) / numSessioniPratiche;
+        float mediaRicette = 0;
+        if (numSessioniPratiche > 0) mediaRicette = (float) (totaleRicette) / numSessioniPratiche;
         
         // Se non ci sono sessioni pratiche, resetta i valori min/max
         if (numSessioniPratiche == 0) 
@@ -557,8 +555,23 @@ public class Controller
             maxRicette = 0;
         }
 
-        return new int[]{numCorsi, numSessioniOnline, numSessioniPratiche, mediaRicette, maxRicette, minRicette};
+        return new Object[]{numCorsi, numSessioniOnline, numSessioniPratiche, mediaRicette, maxRicette, minRicette};
     }
+    
+    // Metodi privati per VisualizzaReportPage
+    public List<Sessione> getSessioniPerCorsoMeseEdAnno(Corso corso, int mese, int anno) 
+	{
+		List<Sessione> sessioniCorso = getSessioniCorso(corso);
+		List<Sessione> sessioniFiltrate = new ArrayList<>();
+		
+		for (Sessione sessione : sessioniCorso) 
+		{
+			LocalDate data = sessione.getData();
+			if (data.getYear() == anno && data.getMonthValue() == mese) sessioniFiltrate.add(sessione);
+		}
+		
+		return sessioniFiltrate;
+	}
     
     
     // METODI PRIVATI CONDIVISI - GESTIONE ENTITÀ 
