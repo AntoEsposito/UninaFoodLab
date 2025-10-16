@@ -503,18 +503,11 @@ public class Controller
         if (chefAutenticato == null) return null;
         
         // Recupera tutti i corsi dello chef autenticato
-        List<Corso> tuttiCorsi = getCorsiChefAutenticato();
-        List<Corso> corsiDelMese = new ArrayList<>();
+        List<Corso> corsi = getCorsiChefAutenticato();
         
-        // Filtra i corsi che iniziano nel mese/anno selezionato
-        for (Corso corso : tuttiCorsi) 
-        {
-            LocalDate dataInizio = corso.getDataInizio();
-            if (dataInizio.getYear() == anno && dataInizio.getMonthValue() == mese) corsiDelMese.add(corso);
-        }
-        if (corsiDelMese.isEmpty()) return new Object[]{0, 0, 0, 0, 0, 0};
+        if (corsi.isEmpty()) return new Object[]{0, 0, 0, 0, 0, 0};
         
-        int numCorsi = corsiDelMese.size();
+        int numCorsi = corsi.size();
         int numSessioniOnline = 0;
         int numSessioniPratiche = 0;
         int totaleRicette = 0;
@@ -522,7 +515,7 @@ public class Controller
         int minRicette = Integer.MAX_VALUE;
         
         // Analizza le sessioni di ogni corso
-        for (Corso corso : corsiDelMese) 
+        for (Corso corso : corsi) 
         {
             List<Sessione> sessioni = getSessioniPerCorsoMeseEdAnno(corso, mese, anno);
             

@@ -92,7 +92,7 @@ public class VisualizzaReportPage extends JPanel
         // combobox per selezione anno
         annoComboBox = new JComboBox<>();
         int annoCorrente = YearMonth.now().getYear();
-        for (int i = annoCorrente - 5; i <= annoCorrente; i++) annoComboBox.addItem(String.valueOf(i)); // ultimi 5 anni
+        for (int i = annoCorrente - 5; i <= annoCorrente + 1; i++) annoComboBox.addItem(String.valueOf(i)); // ultimi 5 anni
         annoComboBox.setFont(new Font("Segoe UI", Font.BOLD, 14));
         annoComboBox.setBackground(AppColor.BUTTON_BLUE);
         annoComboBox.setForeground(AppColor.FOREGROUND_WHITE);
@@ -229,7 +229,7 @@ public class VisualizzaReportPage extends JPanel
         JFreeChart chart = ChartFactory.createBarChart(
             "Statistiche Attività del Periodo",
             "",  // Nessuna etichetta sull'asse X, le etichette delle barre sono auto-descrittive
-            "Quantità",
+            "",
             dataset,
             PlotOrientation.VERTICAL,
             false,
@@ -253,9 +253,7 @@ public class VisualizzaReportPage extends JPanel
         plot.getDomainAxis().setTickLabelFont(new Font("Segoe UI", Font.BOLD, 14));
       
         // asse Y (valori)
-        plot.getRangeAxis().setLabelPaint(AppColor.FOREGROUND_WHITE);
         plot.getRangeAxis().setTickLabelPaint(AppColor.FOREGROUND_WHITE);
-        plot.getRangeAxis().setLabelFont(new Font("Segoe UI", Font.BOLD, 14));
         plot.getRangeAxis().setTickLabelFont(new Font("Segoe UI", Font.PLAIN, 14));
         
         plot.getRenderer().setSeriesPaint(0, AppColor.BUTTON_BLUE); // Blu per tutte le barre
