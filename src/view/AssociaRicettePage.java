@@ -46,7 +46,7 @@ public class AssociaRicettePage extends JDialog
         this.controller = controller;
         this.sessioneId = sessioneId;
         
-        setSize(700, 500);
+        setSize(800, 570);
         setLocationRelativeTo(owner);
         getContentPane().setBackground(AppColor.BACKGROUND_GREY);
         

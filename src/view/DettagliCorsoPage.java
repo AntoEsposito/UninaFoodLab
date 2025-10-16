@@ -25,7 +25,7 @@ public class DettagliCorsoPage extends JDialog
         super(owner, "Dettagli Corso", ModalityType.APPLICATION_MODAL);
         this.controller = controller;
 
-        setSize(800, 600);
+        setSize(900, 650);
         setLocationRelativeTo(owner);
         getContentPane().setBackground(AppColor.BACKGROUND_GREY);
         
@@ -39,9 +39,10 @@ public class DettagliCorsoPage extends JDialog
         getContentPane().setLayout(new BorderLayout(10, 10));
         
         // Panel con informazioni corso
-        JPanel infoPanel = new JPanel(new GridLayout(5, 2, 10, 5));
+        JPanel infoPanel = new JPanel();
         infoPanel.setBackground(AppColor.BACKGROUND_GREY);
         getContentPane().add(infoPanel, BorderLayout.NORTH);
+        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
         
         // labels informazioni corso
         infoPanel.add(creaLabelBianca("  ID Corso: " + String.valueOf(controller.getIdCorsoSelezionato())));

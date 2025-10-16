@@ -28,6 +28,7 @@ public class NuovoCorsoPage extends JPanel
     private JLabel dataInizioLabel;
     private JLabel numeroSessioniLabel;
     private JLabel frequenzaLabel;
+    private JLabel logoLabel;
     
     private JComboBox<String> categoriaCombo;
     private JComboBox<String> frequenzaCombo;
@@ -172,6 +173,10 @@ public class NuovoCorsoPage extends JPanel
         creaCorsoButton.setOpaque(true);
         creaCorsoButton.addActionListener(e -> creaCorso());
         add(creaCorsoButton, BorderLayout.SOUTH);
+        
+        logoLabel = new JLabel();
+        logoLabel.setIcon(new ImageIcon(NuovoCorsoPage.class.getResource("/images/UninaFoodLabLogo.png")));
+        add(logoLabel, BorderLayout.EAST);
         
         // Inizializza con 4 sessioni
         aggiornaSessioniPanel();
