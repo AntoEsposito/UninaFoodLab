@@ -2,12 +2,12 @@
 -- PostgreSQL database dump
 --
 
-\restrict WUbiTOnXdloiIeNIjjZ6WqdaeFMVDweoA5N32ZojtvLiYJnekpCxMzswKwVijjU
+\restrict smdcKeK5lY15v9fpUhds2iUWQknJBB2sXspTsFrd1oRejLvLNLyiLEvXiFStQUd
 
 -- Dumped from database version 17.5
 -- Dumped by pg_dump version 17.6
 
--- Started on 2025-10-18 02:13:57
+-- Started on 2025-10-18 02:40:02
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -20,6 +20,25 @@ SET check_function_bodies = false;
 SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
+
+--
+-- TOC entry 4 (class 2615 OID 2200)
+-- Name: public; Type: SCHEMA; Schema: -; Owner: pg_database_owner
+--
+
+CREATE SCHEMA public;
+
+
+ALTER SCHEMA public OWNER TO pg_database_owner;
+
+--
+-- TOC entry 5033 (class 0 OID 0)
+-- Dependencies: 4
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: pg_database_owner
+--
+
+COMMENT ON SCHEMA public IS 'standard public schema';
+
 
 --
 -- TOC entry 240 (class 1255 OID 17143)
@@ -133,7 +152,7 @@ CREATE SEQUENCE public.categoria_id_categoria_seq
 ALTER SEQUENCE public.categoria_id_categoria_seq OWNER TO postgres;
 
 --
--- TOC entry 5033 (class 0 OID 0)
+-- TOC entry 5034 (class 0 OID 0)
 -- Dependencies: 218
 -- Name: categoria_id_categoria_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -174,7 +193,7 @@ CREATE SEQUENCE public.chef_id_chef_seq
 ALTER SEQUENCE public.chef_id_chef_seq OWNER TO postgres;
 
 --
--- TOC entry 5034 (class 0 OID 0)
+-- TOC entry 5035 (class 0 OID 0)
 -- Dependencies: 220
 -- Name: chef_id_chef_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -217,7 +236,7 @@ CREATE SEQUENCE public.corso_id_corso_seq
 ALTER SEQUENCE public.corso_id_corso_seq OWNER TO postgres;
 
 --
--- TOC entry 5035 (class 0 OID 0)
+-- TOC entry 5036 (class 0 OID 0)
 -- Dependencies: 222
 -- Name: corso_id_corso_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -255,7 +274,7 @@ CREATE SEQUENCE public.frequenza_id_frequenza_seq
 ALTER SEQUENCE public.frequenza_id_frequenza_seq OWNER TO postgres;
 
 --
--- TOC entry 5036 (class 0 OID 0)
+-- TOC entry 5037 (class 0 OID 0)
 -- Dependencies: 224
 -- Name: frequenza_id_frequenza_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -293,7 +312,7 @@ CREATE SEQUENCE public.ingrediente_id_ingrediente_seq
 ALTER SEQUENCE public.ingrediente_id_ingrediente_seq OWNER TO postgres;
 
 --
--- TOC entry 5037 (class 0 OID 0)
+-- TOC entry 5038 (class 0 OID 0)
 -- Dependencies: 226
 -- Name: ingrediente_id_ingrediente_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -386,7 +405,7 @@ CREATE SEQUENCE public.ricetta_id_ricetta_seq
 ALTER SEQUENCE public.ricetta_id_ricetta_seq OWNER TO postgres;
 
 --
--- TOC entry 5038 (class 0 OID 0)
+-- TOC entry 5039 (class 0 OID 0)
 -- Dependencies: 232
 -- Name: ricetta_id_ricetta_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -430,7 +449,7 @@ CREATE SEQUENCE public.sessione_id_sessione_seq
 ALTER SEQUENCE public.sessione_id_sessione_seq OWNER TO postgres;
 
 --
--- TOC entry 5039 (class 0 OID 0)
+-- TOC entry 5040 (class 0 OID 0)
 -- Dependencies: 234
 -- Name: sessione_id_sessione_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -471,7 +490,7 @@ CREATE SEQUENCE public.utente_id_utente_seq
 ALTER SEQUENCE public.utente_id_utente_seq OWNER TO postgres;
 
 --
--- TOC entry 5040 (class 0 OID 0)
+-- TOC entry 5041 (class 0 OID 0)
 -- Dependencies: 236
 -- Name: utente_id_utente_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -1278,7 +1297,7 @@ COPY public.utente (id_utente, nome, cognome, username, password) FROM stdin;
 
 
 --
--- TOC entry 5041 (class 0 OID 0)
+-- TOC entry 5042 (class 0 OID 0)
 -- Dependencies: 218
 -- Name: categoria_id_categoria_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -1287,7 +1306,7 @@ SELECT pg_catalog.setval('public.categoria_id_categoria_seq', 1, false);
 
 
 --
--- TOC entry 5042 (class 0 OID 0)
+-- TOC entry 5043 (class 0 OID 0)
 -- Dependencies: 220
 -- Name: chef_id_chef_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -1296,7 +1315,7 @@ SELECT pg_catalog.setval('public.chef_id_chef_seq', 2, true);
 
 
 --
--- TOC entry 5043 (class 0 OID 0)
+-- TOC entry 5044 (class 0 OID 0)
 -- Dependencies: 222
 -- Name: corso_id_corso_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -1305,7 +1324,7 @@ SELECT pg_catalog.setval('public.corso_id_corso_seq', 25, true);
 
 
 --
--- TOC entry 5044 (class 0 OID 0)
+-- TOC entry 5045 (class 0 OID 0)
 -- Dependencies: 224
 -- Name: frequenza_id_frequenza_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -1314,7 +1333,7 @@ SELECT pg_catalog.setval('public.frequenza_id_frequenza_seq', 1, false);
 
 
 --
--- TOC entry 5045 (class 0 OID 0)
+-- TOC entry 5046 (class 0 OID 0)
 -- Dependencies: 226
 -- Name: ingrediente_id_ingrediente_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -1323,7 +1342,7 @@ SELECT pg_catalog.setval('public.ingrediente_id_ingrediente_seq', 1, false);
 
 
 --
--- TOC entry 5046 (class 0 OID 0)
+-- TOC entry 5047 (class 0 OID 0)
 -- Dependencies: 232
 -- Name: ricetta_id_ricetta_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -1332,7 +1351,7 @@ SELECT pg_catalog.setval('public.ricetta_id_ricetta_seq', 1, false);
 
 
 --
--- TOC entry 5047 (class 0 OID 0)
+-- TOC entry 5048 (class 0 OID 0)
 -- Dependencies: 234
 -- Name: sessione_id_sessione_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -1341,7 +1360,7 @@ SELECT pg_catalog.setval('public.sessione_id_sessione_seq', 152, true);
 
 
 --
--- TOC entry 5048 (class 0 OID 0)
+-- TOC entry 5049 (class 0 OID 0)
 -- Dependencies: 236
 -- Name: utente_id_utente_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -1660,11 +1679,11 @@ ALTER TABLE ONLY public.sessione
     ADD CONSTRAINT sessione_id_corso_fkey FOREIGN KEY (id_corso) REFERENCES public.corso(id_corso);
 
 
--- Completed on 2025-10-18 02:13:57
+-- Completed on 2025-10-18 02:40:02
 
 --
 -- PostgreSQL database dump complete
 --
 
-\unrestrict WUbiTOnXdloiIeNIjjZ6WqdaeFMVDweoA5N32ZojtvLiYJnekpCxMzswKwVijjU
+\unrestrict smdcKeK5lY15v9fpUhds2iUWQknJBB2sXspTsFrd1oRejLvLNLyiLEvXiFStQUd
 
