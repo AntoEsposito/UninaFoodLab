@@ -63,7 +63,7 @@ public class NuovoCorsoPage extends JPanel
         add(formPanel, BorderLayout.NORTH);
         
         // label titolo
-        titleLabel = new JLabel("CREA NUOVO CORSO\r\n");
+        titleLabel = new JLabel("PAGINA DI CREAZIONE NUOVO CORSO\r\n");
         titleLabel.setAlignmentY(Component.TOP_ALIGNMENT);
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
         titleLabel.setForeground(AppColor.FOREGROUND_WHITE);

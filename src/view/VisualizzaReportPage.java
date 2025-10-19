@@ -179,7 +179,7 @@ public class VisualizzaReportPage extends JPanel
         if (datiReport == null || ((int)datiReport[0]) == 0)
         {
             JOptionPane.showMessageDialog(this, "Nessun corso trovato per il periodo selezionato", "Informazione", JOptionPane.INFORMATION_MESSAGE);
-            
+            generaGrafico(0, 0, 0, 0, 0, 0);
             resetLabels();
             return;
         }

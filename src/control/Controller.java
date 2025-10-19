@@ -507,7 +507,7 @@ public class Controller
         
         if (corsi.isEmpty()) return new Object[]{0, 0, 0, 0, 0, 0};
         
-        int numCorsi = corsi.size();
+        int numCorsi = 0;
         int numSessioniOnline = 0;
         int numSessioniPratiche = 0;
         int totaleRicette = 0;
@@ -518,7 +518,7 @@ public class Controller
         for (Corso corso : corsi) 
         {
             List<Sessione> sessioni = getSessioniPerCorsoMeseEdAnno(corso, mese, anno);
-            
+            if (!sessioni.isEmpty()) numCorsi++;
             for (Sessione sessione : sessioni) 
             {
                 if (sessione.isInPresenza()) 
