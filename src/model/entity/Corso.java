@@ -50,5 +50,7 @@ public class Corso
 	
 	public List<Sessione> getSessioni() {return new ArrayList<>(sessioni);}
 	
+	public void addSessione (Sessione sessioneToAdd) {sessioni.add(sessioneToAdd);}
+	
 	public void addSessioni (List<Sessione> sessioniToAdd) {sessioni.addAll(sessioniToAdd);}
 }

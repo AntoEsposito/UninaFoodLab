@@ -53,5 +53,9 @@ public class Sessione
 	
 	public Corso getCorsoDiAppartenenza() {return corsoDiAppartenenza;}
 	
+	public void addRicettaTrattata(Ricetta ricetta) {ricetteTrattate.add(ricetta);}
+	
+	public void removeRicettaTrattata(Ricetta ricetta) {ricetteTrattate.remove(ricetta);}
+	
 	public List<Ricetta> getRicetteTrattate() {return new ArrayList<>(ricetteTrattate);}
 }

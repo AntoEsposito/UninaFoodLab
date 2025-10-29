@@ -57,9 +57,7 @@ public class SessioneDAO
 					CorsoDAO corsoDAO = new CorsoDAO();
 					Corso corso = corsoDAO.getById(idCorso);
 					
-					if (corso != null) {
-						return createSessioneFromResultSetAndCorso(rs, corso);
-					}
+					if (corso != null) return createSessioneFromResultSetAndCorso(rs, corso);
 				}
 			}
 		}
