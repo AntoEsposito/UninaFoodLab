@@ -160,7 +160,13 @@ public class Controller
         if (chefAutenticato == null) return false;
         
         Corso nuovoCorso = new Corso(dataInizio, numeroSessioni, frequenza, categoria, chefAutenticato, new ArrayList<>());
-        return corsoDAO.addCorso(nuovoCorso);
+        boolean aggiunto = corsoDAO.addCorso(nuovoCorso);
+        if (aggiunto)
+        {
+        	chefAutenticato.addCorso(nuovoCorso);
+			return true;
+        }
+        else return false; 
     }
     
     private Corso getUltimoCorsoCreato()
@@ -199,7 +205,13 @@ public class Controller
     private boolean aggiungiSessione(Corso corso, boolean inPresenza, LocalDate data, int numeroSessione, String urlMeeting) 
     {
         Sessione nuovaSessione = new Sessione(inPresenza, data, numeroSessione, urlMeeting, corso);
-        return sessioneDAO.addSessione(nuovaSessione);
+        boolean aggiunta = sessioneDAO.addSessione(nuovaSessione);
+        if (aggiunta) 
+		{
+			corso.addSessione(nuovaSessione);
+			return true;
+		}
+		else return false;
     }
     
     
@@ -341,7 +353,7 @@ public class Controller
     // Metodi privati
     private List<Sessione> getSessioniCorso(Corso corso) 
     {
-        return sessioneDAO.getByCorso(corso);
+        return corso.getSessioni();
     }
     
     
@@ -375,34 +387,6 @@ public class Controller
         
         for (Ricetta r : associate) nomi.add(r.getNome());
         return nomi;
-    }
-    
-    public boolean associaRicetteASessioneByNomi(int sessioneId, List<String> nomiRicette)
-    {
-        Sessione sessione = getSessioneById(sessioneId);
-        if (sessione == null) return false;
-        
-        List<Ricetta> tutteRicette = getAllRicette();
-        boolean tutteAssociate = true;
-        
-        for (String nome : nomiRicette) 
-        {
-            Ricetta ricettaDaAssociare = null;
-            for (Ricetta r : tutteRicette) 
-            {
-                if (r.getNome().equals(nome)) 
-                {
-                    ricettaDaAssociare = r;
-                    break;
-                }
-            }
-            if (ricettaDaAssociare != null) 
-            {
-                if (!associaRicettaASessione(sessione, ricettaDaAssociare)) tutteAssociate = false;
-            }
-        }
-        
-        return tutteAssociate;
     }
     
     public boolean associaRicettaASessioneByNome(int sessioneId, String nomeRicetta)
@@ -444,9 +428,7 @@ public class Controller
             }
         }
         
-        if (ricettaDaRimuovere != null) {
-            return rimuoviRicettaDaSessione(sessione, ricettaDaRimuovere);
-        }
+        if (ricettaDaRimuovere != null) return rimuoviRicettaDaSessione(sessione, ricettaDaRimuovere);
         
         return false;
     }
@@ -487,12 +469,24 @@ public class Controller
     
     private boolean associaRicettaASessione(Sessione sessione, Ricetta ricetta) 
     {
-        return realizzazioneRicettaDAO.associaRicettaASessione(sessione, ricetta);
+        boolean aggiunta = realizzazioneRicettaDAO.associaRicettaASessione(sessione, ricetta);
+        if (aggiunta)
+        {
+			sessione.addRicettaTrattata(ricetta);
+			return true;
+		}
+		else return false;
     }
     
     private boolean rimuoviRicettaDaSessione(Sessione sessione, Ricetta ricetta) 
 	{
-		return realizzazioneRicettaDAO.rimuoviRicettaDaSessione(sessione, ricetta);
+		boolean rimossa = realizzazioneRicettaDAO.rimuoviRicettaDaSessione(sessione, ricetta);
+		if (rimossa) 
+		{
+			sessione.removeRicettaTrattata(ricetta);
+			return true;
+		}
+		else return false;
 	}
     
     
@@ -603,7 +597,7 @@ public class Controller
     private List<Corso> getCorsiChefAutenticato() 
     {
         if (chefAutenticato == null) return new ArrayList<>();
-        return corsoDAO.getByChef(chefAutenticato);
+        return chefAutenticato.getCorsiGestiti();
     }
     
     // Gestione Ricette
@@ -614,6 +608,6 @@ public class Controller
     
     private List<Ricetta> getRicetteAssociateASessione(Sessione sessione)
     {
-        return ricettaDAO.getBySessione(sessione);
+        return sessione.getRicetteTrattate();
     }
 }

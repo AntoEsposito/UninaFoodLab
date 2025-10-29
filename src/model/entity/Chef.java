@@ -45,5 +45,7 @@ public class Chef
 	
 	public List<Corso> getCorsiGestiti() {return new ArrayList<>(corsiGestiti);}
 	
+	public void addCorso (Corso corso) {corsiGestiti.add(corso);}
+	
 	public void addCorsi (List<Corso> corsi) {corsiGestiti.addAll(corsi);}
 }
