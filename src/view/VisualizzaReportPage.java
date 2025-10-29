@@ -163,9 +163,6 @@ public class VisualizzaReportPage extends JPanel
         mediaRicetteLabel.setText("Numero medio di ricette realizzate: -");
         maxRicetteLabel.setText("Numero massimo di ricette realizzate: -");
         minRicetteLabel.setText("Numero minimo di ricette realizzate: -");
-        chartPanel.removeAll();
-        chartPanel.revalidate();
-        chartPanel.repaint();
     }
     
     private void generaReport() 
