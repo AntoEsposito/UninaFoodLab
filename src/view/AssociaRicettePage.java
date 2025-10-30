@@ -16,7 +16,7 @@ public class AssociaRicettePage extends JDialog
 {
 	private static final long serialVersionUID = 1L;
 	private Controller controller;
-    private int sessioneId;
+    private DettagliCorsoPage parentPage;
     
     private JPanel infoPanel;
     private JPanel disponibiliPanel;
@@ -40,11 +40,11 @@ public class AssociaRicettePage extends JDialog
     private JButton chiudiButton;
     
     
-    public AssociaRicettePage(Window owner, Controller controller, int sessioneId) 
+    public AssociaRicettePage(Window owner, Controller controller) 
     {
         super(owner, "Associa Ricette alla Sessione", ModalityType.APPLICATION_MODAL);
         this.controller = controller;
-        this.sessioneId = sessioneId;
+        this.parentPage = (DettagliCorsoPage) owner;
         
         setSize(800, 570);
         setLocationRelativeTo(owner);
@@ -66,7 +66,7 @@ public class AssociaRicettePage extends JDialog
         add(infoPanel, BorderLayout.NORTH);
         
         // label info sessione
-        infoLabel = new JLabel(controller.getInfoSessioneById(sessioneId));
+        infoLabel = new JLabel(controller.getInfoSessioneSelezionata());
         infoLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
         infoLabel.setForeground(AppColor.FOREGROUND_WHITE);
         infoPanel.add(infoLabel);
@@ -177,8 +177,8 @@ public class AssociaRicettePage extends JDialog
     private void caricaRicette() 
     {
         // Carica ricette disponibili e associate tramite controller usando l'ID della sessione
-        List<String> ricetteDisponibili = controller.getNomiRicetteDisponibiliPerSessione(sessioneId);
-        List<String> ricetteAssociate = controller.getNomiRicetteAssociateASessione(sessioneId);
+        List<String> ricetteDisponibili = controller.getNomiRicetteDisponibiliPerSessioneSelezionata();
+        List<String> ricetteAssociate = controller.getNomiRicetteAssociateASessioneSelezionata();
         
         // Popola le liste
         ricetteDisponibiliModel.clear();
@@ -198,12 +198,14 @@ public class AssociaRicettePage extends JDialog
             return;
         }
         
-        boolean aggiunta = controller.associaRicettaASessioneByNome(sessioneId, selezionata);
+        boolean aggiunta = controller.associaRicettaASessioneSelezionataByNome(selezionata);
         if (aggiunta) 
         {
             // Sposta la ricetta dalla lista disponibili a quella associate
             ricetteDisponibiliModel.removeElement(selezionata);
             ricetteAssociateModel.addElement(selezionata);
+            // Aggiorna la tabella nella pagina dettagli corso
+            parentPage.aggiornaTabella();
         } else JOptionPane.showMessageDialog(this, "Errore nell'associazione della ricetta", "Errore", JOptionPane.ERROR_MESSAGE);
     }
     
@@ -217,12 +219,14 @@ public class AssociaRicettePage extends JDialog
             return;
         }
         
-        boolean rimossa = controller.rimuoviRicettaDaSessioneByNome(sessioneId, selezionata);
+        boolean rimossa = controller.rimuoviRicettaDaSessioneByNome(selezionata);
         if (rimossa) 
         {
             // Sposta la ricetta dalla lista associate a quella disponibili
             ricetteAssociateModel.removeElement(selezionata);
             ricetteDisponibiliModel.addElement(selezionata);
+            // Aggiorna la tabella nella pagina dettagli corso
+            parentPage.aggiornaTabella();
         } else JOptionPane.showMessageDialog(this, "Errore nella rimozione della ricetta", "Errore", JOptionPane.ERROR_MESSAGE);
     }
 }

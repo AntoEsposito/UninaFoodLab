@@ -55,7 +55,17 @@ public class Sessione
 	
 	public void addRicettaTrattata(Ricetta ricetta) {ricetteTrattate.add(ricetta);}
 	
-	public void removeRicettaTrattata(Ricetta ricetta) {ricetteTrattate.remove(ricetta);}
+	public void removeRicettaTrattata(Ricetta ricetta)
+	{
+		for (int i = 0; i < ricetteTrattate.size(); i++) 
+		{
+			if (ricetteTrattate.get(i).getId() == ricetta.getId()) 
+			{
+				ricetteTrattate.remove(i);
+				break;
+			}
+		}
+	}
 	
 	public List<Ricetta> getRicetteTrattate() {return new ArrayList<>(ricetteTrattate);}
 }

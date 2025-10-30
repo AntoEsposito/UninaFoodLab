@@ -28,6 +28,7 @@ public class Controller
     
     private Chef chefAutenticato; // chef attualmente loggato
     private Corso corsoSelezionato; // per tenere traccia del corso selezionato in VisualizzaCorsiPage
+    private Sessione sessioneSelezionata;
     
     
     public Controller() 
@@ -339,12 +340,12 @@ public class Controller
     public void apriAssociaRicetteDialog(DettagliCorsoPage paginaDettagliCorso, int selectedRow) 
 	{
 	    List<Sessione> sessioni = getSessioniCorso(corsoSelezionato);
-	    Sessione sessioneSelezionata = sessioni.get(selectedRow);
+	    Sessione sessione = sessioni.get(selectedRow);
 	    
-	    if (sessioneSelezionata.isInPresenza())
+	    if (sessione.isInPresenza())
 	    {
-		    int sessioneId = sessioneSelezionata.getId();
-		    AssociaRicettePage dialog = new AssociaRicettePage(SwingUtilities.getWindowAncestor(paginaDettagliCorso), this, sessioneId);
+		    this.sessioneSelezionata = sessione;
+		    AssociaRicettePage dialog = new AssociaRicettePage(paginaDettagliCorso, this);
 		    dialog.setVisible(true);
 	    }
 	    else JOptionPane.showMessageDialog(paginaDettagliCorso, "Non è possibile associare ricette a sessioni online.", "Operazione non consentita", JOptionPane.WARNING_MESSAGE);
@@ -359,40 +360,37 @@ public class Controller
     
     // METODI PER AssociaRicettePage
     // Metodi pubblici
-    public String getInfoSessioneById(int sessioneId)
+    public String getInfoSessioneSelezionata()
     {
-        Sessione sessione = getSessioneById(sessioneId);
-        return getInfoSessione(sessione);
+        if (sessioneSelezionata == null) return "";
+        return "Sessione N° " + sessioneSelezionata.getNumeroSessione() + " - Data: " + sessioneSelezionata.getData();
     }
     
-    public List<String> getNomiRicetteDisponibiliPerSessione(int sessioneId)
+    public List<String> getNomiRicetteDisponibiliPerSessioneSelezionata()
     {
-        Sessione sessione = getSessioneById(sessioneId);
-        if (sessione == null) return new ArrayList<>();
+        if (sessioneSelezionata == null) return new ArrayList<>();
         
-        List<Ricetta> disponibili = getRicetteDisponibiliPerSessione(sessione);
+        List<Ricetta> disponibili = getRicetteDisponibiliPerSessione(sessioneSelezionata);
         List<String> nomi = new ArrayList<>();
         
         for (Ricetta r : disponibili) nomi.add(r.getNome());
         return nomi;
     }
     
-    public List<String> getNomiRicetteAssociateASessione(int sessioneId)
+    public List<String> getNomiRicetteAssociateASessioneSelezionata()
     {
-        Sessione sessione = getSessioneById(sessioneId);
-        if (sessione == null) return new ArrayList<>();
+        if (sessioneSelezionata == null) return new ArrayList<>();
         
-        List<Ricetta> associate = getRicetteAssociateASessione(sessione);
+        List<Ricetta> associate = getRicetteAssociateASessione(sessioneSelezionata);
         List<String> nomi = new ArrayList<>();
         
         for (Ricetta r : associate) nomi.add(r.getNome());
         return nomi;
     }
     
-    public boolean associaRicettaASessioneByNome(int sessioneId, String nomeRicetta)
+    public boolean associaRicettaASessioneSelezionataByNome(String nomeRicetta)
     {
-        Sessione sessione = getSessioneById(sessioneId);
-        if (sessione == null) return false;
+        if (sessioneSelezionata == null) return false;
         
         List<Ricetta> tutteRicette = getAllRicette();
         Ricetta ricettaDaAssociare = null;
@@ -406,15 +404,14 @@ public class Controller
             }
         }
         
-        if (ricettaDaAssociare != null) return associaRicettaASessione(sessione, ricettaDaAssociare);
+        if (ricettaDaAssociare != null) return associaRicettaASessione(sessioneSelezionata, ricettaDaAssociare);
         
         return false;
     }
     
-    public boolean rimuoviRicettaDaSessioneByNome(int sessioneId, String nomeRicetta)
+    public boolean rimuoviRicettaDaSessioneByNome(String nomeRicetta)
     {
-        Sessione sessione = getSessioneById(sessioneId);
-        if (sessione == null) return false;
+        if (sessioneSelezionata == null) return false;
         
         List<Ricetta> tutteRicette = getAllRicette();
         Ricetta ricettaDaRimuovere = null;
@@ -428,22 +425,12 @@ public class Controller
             }
         }
         
-        if (ricettaDaRimuovere != null) return rimuoviRicettaDaSessione(sessione, ricettaDaRimuovere);
+        if (ricettaDaRimuovere != null) return rimuoviRicettaDaSessione(sessioneSelezionata, ricettaDaRimuovere);
         
         return false;
     }
     
     // Metodi privati
-    private Sessione getSessioneById(int id)
-    {
-        return sessioneDAO.getById(id);
-    }
-    
-    private String getInfoSessione(Sessione sessione)
-    {
-        if (sessione == null) return "";
-        return "Sessione N° " + sessione.getNumeroSessione() + " - Data: " + sessione.getData();
-    }
     
     private List<Ricetta> getRicetteDisponibiliPerSessione(Sessione sessione)
     {

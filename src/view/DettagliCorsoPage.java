@@ -130,6 +130,11 @@ public class DettagliCorsoPage extends JDialog
             return;
         }
         controller.apriAssociaRicetteDialog(this, selectedRow);
-        controller.caricaSessioniInDettagliCorsoPage(sessioniTableModel); // aggiorna la tabella dopo l'associazione
+    }
+    
+    public void aggiornaTabella() 
+    {
+        sessioniTableModel.setRowCount(0);
+        controller.caricaSessioniInDettagliCorsoPage(sessioniTableModel);
     }
 }
